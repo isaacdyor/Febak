@@ -1,0 +1,15 @@
+Now:
+- render conversations
+- render messages
+
+
+
+Eventually
+- set up tests
+- set up local database
+- set up CI/CD
+- set up deployment
+- set up monitoring
+- set up logging
+
+
