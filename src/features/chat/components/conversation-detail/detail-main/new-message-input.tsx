@@ -3,6 +3,7 @@ import {
   type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
 import { useChatStore } from "@/features/chat/use-chat";
+import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -36,13 +37,19 @@ export const NewMessageInput = () => {
 
   const sendMessage = async () => {
     if (message.trim() && activeConversation) {
-      const conversation = await createConversation.mutateAsync({
+      const result = await createConversation.mutateAsync({
         userId: activeConversation.userId,
         visitorId: activeConversation.visitorId,
         messageContent: message,
       });
-      updateActiveConversation(conversation.conversation);
+      const fullConversation: FullConversation = {
+        ...result.conversation,
+        visitor: activeConversation.visitor,
+        messages: [result.message],
+      };
 
+      updateActiveConversation(fullConversation);
+      addConversation(fullConversation);
       setMessage("");
     }
   };
