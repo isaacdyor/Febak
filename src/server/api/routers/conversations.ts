@@ -55,7 +55,10 @@ export const conversationsRouter = createTRPCRouter({
           });
         }
 
-        return { conversation: newConversation, message: newMessage };
+        return {
+          ...newConversation,
+          messages: [newMessage],
+        };
       });
     }),
 

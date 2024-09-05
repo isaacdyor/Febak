@@ -1,13 +1,17 @@
 import { useChatStore } from "@/features/chat/use-chat";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
 
 export const ConversationList = () => {
-  const conversations = useChatStore((state) => state.conversations);
+  // const conversations = useChatStore((state) => state.conversations);
+  const { data: conversations } = api.conversations.getAll.useQuery();
   const setActiveConversation = useChatStore(
     (state) => state.setActiveConversation,
   );
   const activeConversation = useChatStore((state) => state.activeConversation);
+
+  if (!conversations) return null;
 
   return (
     <div className="flex flex-col">

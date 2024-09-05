@@ -6,6 +6,7 @@ import { useChatStore } from "@/features/chat/use-chat";
 import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
 import { useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const NewMessageInput = () => {
   const [message, setMessage] = useState("");
@@ -18,8 +19,58 @@ export const NewMessageInput = () => {
   );
 
   const addConversation = useChatStore((state) => state.addConversation);
+  const utils = api.useUtils();
+  const createConversation = api.conversations.create.useMutation({
+    onMutate: async (newConversationInput) => {
+      await utils.conversations.getAll.cancel();
 
-  const createConversation = api.conversations.create.useMutation();
+      const previousConversations = utils.conversations.getAll.getData();
+
+      const tempId = uuidv4();
+      const now = new Date();
+
+      const optimisticConversation = {
+        id: tempId,
+        userId: newConversationInput.userId,
+        visitorId: newConversationInput.visitorId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        messages: [
+          {
+            id: uuidv4(),
+            conversationId: tempId,
+            content: newConversationInput.messageContent,
+            createdAt: new Date(),
+            sentByUser: true,
+          },
+        ],
+        visitor: {
+          id: newConversationInput.visitorId,
+          name: null, // We don't have this information, so we set it to null
+          userId: newConversationInput.userId,
+          active: true, // Assuming the visitor is active when creating a conversation
+          currentPage: null, // We don't have this information
+          lastSeen: now,
+          createdAt: now,
+        },
+      };
+
+      utils.conversations.getAll.setData(undefined, (previousConversations) =>
+        previousConversations
+          ? [...previousConversations, optimisticConversation]
+          : [optimisticConversation],
+      );
+      return { previousConversations };
+    },
+    onError(err, newPost, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.conversations.getAll.setData(undefined, ctx?.previousConversations);
+    },
+    async onSettled() {
+      // Sync with server once mutation has settled
+      await utils.conversations.getAll.invalidate();
+    },
+  });
 
   const inputRef = useRef<AutosizeTextAreaRef>(null);
 
@@ -43,9 +94,8 @@ export const NewMessageInput = () => {
         messageContent: message,
       });
       const fullConversation: FullConversation = {
-        ...result.conversation,
+        ...result,
         visitor: activeConversation.visitor,
-        messages: [result.message],
       };
 
       updateActiveConversation(fullConversation);
