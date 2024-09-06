@@ -6,8 +6,11 @@ import Link from "next/link";
 export const ConversationList = () => {
   const conversations = useChatStore((state) => state.conversations);
   // const { data: conversations } = api.conversations.getAll.useQuery();
-  const setActiveConversation = useChatStore(
-    (state) => state.setActiveConversation,
+  const { setActiveConversation, clearNewMessageInput } = useChatStore(
+    (state) => ({
+      setActiveConversation: state.setActiveConversation,
+      clearNewMessageInput: state.clearNewMessageInput,
+    }),
   );
   const activeConversation = useChatStore((state) => state.activeConversation);
 
@@ -17,9 +20,10 @@ export const ConversationList = () => {
         conversation.newConversation ? (
           <Link
             key={conversation.id}
-            href="/chat"
+            href="/chat?new"
             onClick={() => {
               setActiveConversation(conversation);
+              clearNewMessageInput();
             }}
             className={cn(
               "flex items-center gap-4 border-b p-2 hover:cursor-pointer hover:bg-secondary",
@@ -40,7 +44,10 @@ export const ConversationList = () => {
           <Link
             key={conversation.id}
             href={`/chat?conversation=${conversation.id}`}
-            onClick={() => setActiveConversation(conversation)}
+            onClick={() => {
+              setActiveConversation(conversation);
+              clearNewMessageInput();
+            }}
             className={cn(
               "flex items-center gap-4 border-b p-2 hover:cursor-pointer hover:bg-secondary",
               conversation.id === activeConversation?.id && "bg-secondary",

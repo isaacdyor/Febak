@@ -3,16 +3,17 @@ import { useUser } from "@/features/auth/use-user";
 import { useChatStore } from "@/features/chat/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { type Visitor } from "@/server/db/types";
+import { useRouter } from "next/navigation";
 
 export const ConversationSuggestion: React.FC<{ visitor: Visitor }> = ({
   visitor,
 }) => {
-  const { setActiveConversation, addConversation, setConversations } =
-    useChatStore((state) => ({
-      setActiveConversation: state.setActiveConversation,
-      addConversation: state.addConversation,
-      setConversations: state.setConversations,
-    }));
+  const { setActiveConversation, addConversation } = useChatStore((state) => ({
+    setActiveConversation: state.setActiveConversation,
+    addConversation: state.addConversation,
+  }));
+
+  const router = useRouter();
 
   const { user } = useUser();
 
@@ -26,6 +27,7 @@ export const ConversationSuggestion: React.FC<{ visitor: Visitor }> = ({
         setTimeout(() => {
           setActiveConversation(conversation);
         }, 0);
+        router.push("/chat?new");
       }}
       className="flex items-center gap-2 border-b p-2 hover:cursor-pointer hover:bg-secondary"
     >

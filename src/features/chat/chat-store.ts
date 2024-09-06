@@ -3,6 +3,7 @@
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 import { type FullConversation, type Visitor } from "@/server/db/types";
+import { ne } from "drizzle-orm";
 import { createStore } from "zustand";
 
 export interface ChatState {
@@ -30,6 +31,7 @@ export interface ChatState {
     ref: React.RefObject<AutosizeTextAreaRef> | null,
   ) => void;
   focusNewMessageInput: () => void;
+  clearNewMessageInput: () => void;
 }
 
 export interface ChatStoreProps {
@@ -85,6 +87,13 @@ export const createChatStore = (initProps: ChatStoreProps) => {
     focusNewMessageInput: () => {
       const { newMessageInputRef } = get();
       newMessageInputRef?.current?.textArea.focus();
+    },
+    clearNewMessageInput: () => {
+      const { newMessageInputRef } = get();
+
+      if (newMessageInputRef?.current) {
+        newMessageInputRef.current.clear();
+      }
     },
   }));
 };

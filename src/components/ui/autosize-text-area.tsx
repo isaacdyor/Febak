@@ -45,6 +45,8 @@ export type AutosizeTextAreaRef = {
   textArea: HTMLTextAreaElement;
   maxHeight: number;
   minHeight: number;
+  focus: () => void;
+  clear: () => void;
 };
 
 type AutosizeTextAreaProps = {
@@ -82,6 +84,16 @@ export const AutosizeTextarea = React.forwardRef<
       focus: () => textAreaRef.current?.focus(),
       maxHeight,
       minHeight,
+      clear: () => {
+        if (textAreaRef.current) {
+          textAreaRef.current.value = "";
+          setTriggerAutoSize("");
+          // Manually trigger onChange to update any parent state
+          onChange?.({
+            target: { value: "" },
+          } as React.ChangeEvent<HTMLTextAreaElement>);
+        }
+      },
     }));
 
     React.useEffect(() => {

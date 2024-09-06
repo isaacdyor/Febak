@@ -1,13 +1,15 @@
 import { useChatStore } from "@/features/chat/use-chat";
+import { clear } from "console";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 // This hook syncs the active conversation with the URL
 export function useSync() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const conversationId = searchParams.get("conversation");
-  const isInitialRender = useRef(true);
+  const newConversation = searchParams.has("new");
+  const searchConversation = searchParams.has("search");
 
   const { setActiveConversation, conversations, focusNewConversaationInput } =
     useChatStore((state) => ({
@@ -24,18 +26,21 @@ export function useSync() {
           (conv) => conv.id === conversationId,
         );
         setActiveConversation(conversation ?? conversations[0] ?? null);
-      } else {
+      } else if (!newConversation && searchConversation) {
         setActiveConversation(null);
         setTimeout(() => focusNewConversaationInput(), 0);
+      } else {
+        setActiveConversation(conversations[0] ?? null);
       }
-      isInitialRender.current = false;
     };
     void syncConversationWithUrl();
   }, [
     conversationId,
     router,
     conversations,
+    newConversation,
     setActiveConversation,
     focusNewConversaationInput,
+    searchConversation,
   ]);
 }
