@@ -10,15 +10,18 @@ import { v4 as uuidv4 } from "uuid";
 
 export const NewMessageInput = () => {
   const [message, setMessage] = useState("");
-  const activeConversation = useChatStore((state) => state.activeConversation);
-  const setNewMessageInputRef = useChatStore(
-    (state) => state.setNewMessageInputRef,
-  );
-  const updateActiveConversation = useChatStore(
-    (state) => state.updateActiveConversation,
-  );
+  const {
+    activeConversation,
+    setNewMessageInputRef,
+    updateActiveConversation,
+    addConversation,
+  } = useChatStore((state) => ({
+    activeConversation: state.activeConversation,
+    setNewMessageInputRef: state.setNewMessageInputRef,
+    updateActiveConversation: state.updateActiveConversation,
+    addConversation: state.addConversation,
+  }));
 
-  const addConversation = useChatStore((state) => state.addConversation);
   const utils = api.useUtils();
   const createConversation = api.conversations.create.useMutation({
     onMutate: async (newConversationInput) => {
