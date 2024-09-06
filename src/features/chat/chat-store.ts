@@ -3,6 +3,7 @@
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 import { type FullConversation, type Visitor } from "@/server/db/types";
+import { ne } from "drizzle-orm";
 import { createStore } from "zustand";
 
 export interface ChatState {
@@ -13,7 +14,7 @@ export interface ChatState {
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
   setActiveVisitors: (visitors: Visitor[]) => void;
   setConversations: (conversations: FullConversation[]) => void;
-  setActiveConversation: (conversation: FullConversation) => void;
+  setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
   addActiveVisitor: (visitor: Visitor) => void;
   removeActiveVisitor: (visitorId: string) => void;
@@ -30,6 +31,7 @@ export interface ChatState {
     ref: React.RefObject<AutosizeTextAreaRef> | null,
   ) => void;
   focusNewMessageInput: () => void;
+  clearNewMessageInput: () => void;
 }
 
 export interface ChatStoreProps {
@@ -42,7 +44,7 @@ export type ChatStore = ReturnType<typeof createChatStore>;
 export const createChatStore = (initProps: ChatStoreProps) => {
   return createStore<ChatState>()((set, get) => ({
     ...initProps,
-    activeConversation: initProps.conversations[0] ?? null,
+    activeConversation: null,
     newConversationInputRef: null,
     newMessageInputRef: null,
     setActiveVisitors: (visitors) => set({ activeVisitors: visitors }),
@@ -68,7 +70,7 @@ export const createChatStore = (initProps: ChatStoreProps) => {
       })),
     addConversation: (conversation) =>
       set((state) => ({
-        conversations: [...state.conversations, conversation],
+        conversations: [conversation, ...state.conversations],
       })),
     updateConversation: (conversationId, updates) =>
       set((state) => ({
@@ -85,6 +87,13 @@ export const createChatStore = (initProps: ChatStoreProps) => {
     focusNewMessageInput: () => {
       const { newMessageInputRef } = get();
       newMessageInputRef?.current?.textArea.focus();
+    },
+    clearNewMessageInput: () => {
+      const { newMessageInputRef } = get();
+
+      if (newMessageInputRef?.current) {
+        newMessageInputRef.current.clear();
+      }
     },
   }));
 };

@@ -22,6 +22,7 @@ export function ChatStoreProvider({
   if (!storeRef.current) {
     storeRef.current = createChatStore(props);
   }
+
   return (
     <ChatStoreContext.Provider value={storeRef.current}>
       {children}
