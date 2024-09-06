@@ -13,7 +13,7 @@ export interface ChatState {
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
   setActiveVisitors: (visitors: Visitor[]) => void;
   setConversations: (conversations: FullConversation[]) => void;
-  setActiveConversation: (conversation: FullConversation) => void;
+  setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
   addActiveVisitor: (visitor: Visitor) => void;
   removeActiveVisitor: (visitorId: string) => void;
