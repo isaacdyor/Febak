@@ -47,6 +47,7 @@ export const DetailMenu = () => {
               className="h-6 w-full border-none focus-visible:ring-transparent"
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              autoFocus
             />
           </div>
         )}

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { v4 as uuidv4 } from "uuid"; // Make sure to install the uuid package
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const createVisitor = api.visitors.create.useMutation();

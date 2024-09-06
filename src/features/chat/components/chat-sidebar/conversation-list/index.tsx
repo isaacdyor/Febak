@@ -1,20 +1,19 @@
-import { useChatStore } from "@/features/chat/use-chat";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useChatStore } from "@/features/chat/use-chat";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { checkActiveConversationExists } from "@/features/chat/utils/checkActiveConversationExists";
+import Link from "next/link";
 
 export const ConversationList = () => {
-  // const conversations = useChatStore((state) => state.conversations);
-  const { data: conversations } = api.conversations.getAll.useQuery();
+  const conversations = useChatStore((state) => state.conversations);
+  // const { data: conversations } = api.conversations.getAll.useQuery();
   const setActiveConversation = useChatStore(
     (state) => state.setActiveConversation,
   );
   const activeConversation = useChatStore((state) => state.activeConversation);
 
-  const activeConversationExists = checkActiveConversationExists(
-    conversations ?? [],
-    activeConversation,
+  const activeConversationExists = conversations?.some(
+    (conv) => conv.id === activeConversation?.id,
   );
 
   console.log(activeConversationExists);
@@ -22,11 +21,7 @@ export const ConversationList = () => {
   return (
     <div className="flex flex-col">
       {!activeConversationExists && activeConversation && (
-        <div
-          className={cn(
-            "flex items-center gap-4 border-b bg-secondary p-2 hover:cursor-pointer",
-          )}
-        >
+        <div className="flex items-center gap-4 bg-secondary p-2">
           <Avatar>
             <AvatarFallback className="border bg-background text-sm">
               {activeConversation.visitor.name
@@ -36,12 +31,13 @@ export const ConversationList = () => {
             </AvatarFallback>
           </Avatar>
 
-          <p className="">New Conversation</p>
+          <p>New Conversation</p>
         </div>
       )}
       {conversations?.map((conversation) => (
-        <div
+        <Link
           key={conversation.id}
+          href={`/chat?conversation=${conversation.id}`}
           onClick={() => setActiveConversation(conversation)}
           className={cn(
             "flex items-center gap-4 border-b p-2 hover:cursor-pointer hover:bg-secondary",
@@ -66,7 +62,7 @@ export const ConversationList = () => {
               {conversation.messages[conversation.messages.length - 1]!.content}
             </p>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
