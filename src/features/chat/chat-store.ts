@@ -42,7 +42,7 @@ export type ChatStore = ReturnType<typeof createChatStore>;
 export const createChatStore = (initProps: ChatStoreProps) => {
   return createStore<ChatState>()((set, get) => ({
     ...initProps,
-    activeConversation: initProps.conversations[0] ?? null,
+    activeConversation: null,
     newConversationInputRef: null,
     newMessageInputRef: null,
     setActiveVisitors: (visitors) => set({ activeVisitors: visitors }),
@@ -68,7 +68,7 @@ export const createChatStore = (initProps: ChatStoreProps) => {
       })),
     addConversation: (conversation) =>
       set((state) => ({
-        conversations: [...state.conversations, conversation],
+        conversations: [conversation, ...state.conversations],
       })),
     updateConversation: (conversationId, updates) =>
       set((state) => ({
