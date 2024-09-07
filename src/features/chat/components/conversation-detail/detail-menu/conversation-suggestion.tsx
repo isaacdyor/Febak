@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useUser } from "@/features/auth/use-user";
 import { useChatStore } from "@/features/chat/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { type Visitor } from "@/server/db/types";
@@ -15,9 +14,7 @@ export const ConversationSuggestion: React.FC<{ visitor: Visitor }> = ({
 
   const router = useRouter();
 
-  const { user } = useUser();
-
-  const conversation = generateConversation(visitor, user.id);
+  const conversation = generateConversation(visitor);
   conversation.newConversation = true;
 
   return (

@@ -3,6 +3,8 @@ import {
   type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
 import { useChatStore } from "@/features/chat/use-chat";
+import { generateConversation } from "@/features/chat/utils/generateConversation";
+import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
 import { useEffect, useRef, useState } from "react";
@@ -30,33 +32,16 @@ export const NewMessageInput = () => {
       const previousConversations = utils.conversations.getAll.getData();
 
       const tempId = uuidv4();
-      const now = new Date();
 
-      const optimisticConversation = {
-        id: tempId,
-        userId: newConversationInput.userId,
+      const message = generateMessage({
+        conversationId: tempId,
+        content: newConversationInput.messageContent,
+      });
+
+      const optimisticConversation = generateConversation({
         visitorId: newConversationInput.visitorId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        messages: [
-          {
-            id: uuidv4(),
-            conversationId: tempId,
-            content: newConversationInput.messageContent,
-            createdAt: new Date(),
-            sentByUser: true,
-          },
-        ],
-        visitor: {
-          id: newConversationInput.visitorId,
-          name: null, // We don't have this information, so we set it to null
-          userId: newConversationInput.userId,
-          active: true, // Assuming the visitor is active when creating a conversation
-          currentPage: null, // We don't have this information
-          lastSeen: now,
-          createdAt: now,
-        },
-      };
+        messages: [message],
+      });
 
       utils.conversations.getAll.setData(undefined, (previousConversations) =>
         previousConversations

@@ -5,6 +5,16 @@ export const dashboardConfig = [
     icon: "chat",
   },
   {
+    label: "Visitors",
+    url: "/visitors",
+    icon: "users",
+  },
+  {
+    label: "Explore",
+    url: "/explore",
+    icon: "compass",
+  },
+  {
     label: "API Keys",
     url: "/keys",
     icon: "key",

@@ -1,11 +1,12 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useChatStore } from "@/features/chat/use-chat";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import Link from "next/link";
 
 export const ConversationList = () => {
-  const conversations = useChatStore((state) => state.conversations);
-  // const { data: conversations } = api.conversations.getAll.useQuery();
+  // const conversations = useChatStore((state) => state.conversations);
+  const { data: conversations } = api.conversations.getAll.useQuery();
   const { setActiveConversation, clearNewMessageInput } = useChatStore(
     (state) => ({
       setActiveConversation: state.setActiveConversation,
@@ -14,10 +15,12 @@ export const ConversationList = () => {
   );
   const activeConversation = useChatStore((state) => state.activeConversation);
 
+  const thingy = false;
+
   return (
     <div className="flex flex-col">
       {conversations?.map((conversation) =>
-        conversation.newConversation ? (
+        thingy ? (
           <Link
             key={conversation.id}
             href="/chat?new"
