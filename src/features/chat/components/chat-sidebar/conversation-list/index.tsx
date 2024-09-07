@@ -1,12 +1,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import Link from "next/link";
 
 export const ConversationList = () => {
-  // const conversations = useChatStore((state) => state.conversations);
-  const { data: conversations } = api.conversations.getAll.useQuery();
+  const initialConversations = useChatStore((state) => state.conversations);
+  const { data: conversations } = api.conversations.getAll.useQuery(undefined, {
+    initialData: initialConversations,
+  });
+
   const { setActiveConversation, clearNewMessageInput } = useChatStore(
     (state) => ({
       setActiveConversation: state.setActiveConversation,

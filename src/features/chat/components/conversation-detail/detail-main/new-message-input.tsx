@@ -2,7 +2,7 @@ import {
   AutosizeTextarea,
   type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";
@@ -45,12 +45,8 @@ export const NewMessageInput = () => {
         visitorId: newConversationInput.visitorId,
         messages: [message],
       });
+      addConversation(optimisticConversation);
 
-      utils.conversations.getAll.setData(undefined, (previousConversations) =>
-        previousConversations
-          ? [optimisticConversation, ...previousConversations]
-          : [optimisticConversation],
-      );
       return { previousConversations };
     },
     onError(err, newPost, ctx) {

@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { type Visitor } from "@/server/db/types";
 import { useRouter } from "next/navigation";

@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { SquarePen } from "lucide-react";
 import Link from "next/link";
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 
 export const ConversationMenu = () => {
   const { focusNewConversationInput } = useChatStore((state) => ({

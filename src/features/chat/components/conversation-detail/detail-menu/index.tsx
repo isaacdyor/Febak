@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ConversationSuggestion } from "./conversation-suggestion";
 

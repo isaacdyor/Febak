@@ -2,7 +2,7 @@
 
 import { ConversationDetail } from "./conversation-detail";
 import { ChatSidebar } from "./chat-sidebar";
-import { useSync } from "../use-sync";
+import { useSync } from "../hooks/use-sync";
 
 export const Chat = () => {
   useSync();

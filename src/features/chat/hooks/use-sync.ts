@@ -1,5 +1,4 @@
-import { useChatStore } from "@/features/chat/use-chat";
-import { clear } from "console";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -19,7 +18,6 @@ export function useSync() {
     }));
 
   useEffect(() => {
-    console.log("syncing conversation with url");
     const syncConversationWithUrl = async () => {
       if (conversationId) {
         const conversation = conversations.find(
