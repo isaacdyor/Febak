@@ -1,3 +1,4 @@
+import { dashboardConfig } from "@/config/dashboard-config";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -37,7 +38,8 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedRoutes = ["/chat", "/keys", "/settings"];
+  const protectedRoutes = dashboardConfig.map((route) => route.url);
+  protectedRoutes.push("/api");
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route),
   );
@@ -48,8 +50,7 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/signin";
     return NextResponse.redirect(url);
   }
-
-  if (user && !isProtectedRoute && request.nextUrl.pathname !== "/chat") {
+  if (user && !isProtectedRoute) {
     // Redirect to /chat if authenticated user accesses any unprotected route
     return NextResponse.redirect(new URL("/chat", request.url));
   }

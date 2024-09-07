@@ -25,7 +25,6 @@ export const visitorsRouter = createTRPCRouter({
       where: and(eq(visitors.userId, ctx.user.id), eq(visitors.active, true)),
       orderBy: (visitors, { desc }) => [desc(visitors.createdAt)],
     });
-
     return activeVisitors.length > 0 ? activeVisitors : null;
   }),
 

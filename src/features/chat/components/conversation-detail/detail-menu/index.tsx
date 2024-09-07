@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useChatStore } from "@/features/chat/use-chat";
@@ -14,8 +12,12 @@ export const DetailMenu = () => {
     (state) => state.setNewConversationInputRef,
   );
 
-  const activeVisitors = useChatStore((state) => state.activeVisitors);
-  const activeConversation = useChatStore((state) => state.activeConversation);
+  const { activeVisitors, activeConversation } = useChatStore((state) => ({
+    activeVisitors: state.activeVisitors,
+    activeConversation: state.activeConversation,
+  }));
+
+  console.log(activeVisitors);
 
   useEffect(() => {
     setNewConversationInputRef(inputRef);

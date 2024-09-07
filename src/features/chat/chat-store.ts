@@ -3,7 +3,6 @@
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 import { type FullConversation, type Visitor } from "@/server/db/types";
-import { ne } from "drizzle-orm";
 import { createStore } from "zustand";
 
 export interface ChatState {

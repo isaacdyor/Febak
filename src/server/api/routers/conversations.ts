@@ -63,7 +63,7 @@ export const conversationsRouter = createTRPCRouter({
     }),
 
   getAll: privateProcedure.query(async ({ ctx }) => {
-    const activeVisitors = await ctx.db.query.conversations.findMany({
+    const allConversations = await ctx.db.query.conversations.findMany({
       where: and(eq(conversations.userId, ctx.user.id)),
       orderBy: (visitors, { desc }) => [desc(visitors.createdAt)],
       with: {
@@ -72,6 +72,6 @@ export const conversationsRouter = createTRPCRouter({
       },
     });
 
-    return activeVisitors.length > 0 ? activeVisitors : null;
+    return allConversations.length > 0 ? allConversations : null;
   }),
 });

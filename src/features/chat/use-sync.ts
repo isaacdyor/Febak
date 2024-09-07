@@ -11,11 +11,11 @@ export function useSync() {
   const newConversation = searchParams.has("new");
   const searchConversation = searchParams.has("search");
 
-  const { setActiveConversation, conversations, focusNewConversaationInput } =
+  const { setActiveConversation, conversations, focusNewConversationInput } =
     useChatStore((state) => ({
       conversations: state.conversations,
       setActiveConversation: state.setActiveConversation,
-      focusNewConversaationInput: state.focusNewConversationInput,
+      focusNewConversationInput: state.focusNewConversationInput,
     }));
 
   useEffect(() => {
@@ -26,9 +26,12 @@ export function useSync() {
           (conv) => conv.id === conversationId,
         );
         setActiveConversation(conversation ?? conversations[0] ?? null);
-      } else if (!newConversation && searchConversation) {
+      } else if (
+        (!newConversation && searchConversation) ||
+        conversations.length === 0
+      ) {
         setActiveConversation(null);
-        setTimeout(() => focusNewConversaationInput(), 0);
+        setTimeout(() => focusNewConversationInput(), 0);
       } else {
         setActiveConversation(conversations[0] ?? null);
       }
@@ -40,7 +43,7 @@ export function useSync() {
     conversations,
     newConversation,
     setActiveConversation,
-    focusNewConversaationInput,
+    focusNewConversationInput,
     searchConversation,
   ]);
 }

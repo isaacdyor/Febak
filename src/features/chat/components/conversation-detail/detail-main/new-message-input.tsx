@@ -7,6 +7,7 @@ import { generateConversation } from "@/features/chat/utils/generateConversation
 import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -23,6 +24,8 @@ export const NewMessageInput = () => {
     updateActiveConversation: state.updateActiveConversation,
     addConversation: state.addConversation,
   }));
+
+  const router = useRouter();
 
   const utils = api.useUtils();
   const createConversation = api.conversations.create.useMutation({
@@ -45,7 +48,7 @@ export const NewMessageInput = () => {
 
       utils.conversations.getAll.setData(undefined, (previousConversations) =>
         previousConversations
-          ? [...previousConversations, optimisticConversation]
+          ? [optimisticConversation, ...previousConversations]
           : [optimisticConversation],
       );
       return { previousConversations };
@@ -56,6 +59,7 @@ export const NewMessageInput = () => {
     },
     async onSettled() {
       // Sync with server once mutation has settled
+      router.push(`/chat?conversation=${activeConversation?.id}`);
       await utils.conversations.getAll.invalidate();
     },
   });

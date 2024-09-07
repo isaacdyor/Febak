@@ -31,7 +31,7 @@ export function VisitorProvider() {
         try {
           active = "true";
           localStorage.setItem("active", active);
-          // await startSession.mutateAsync({ id: visitorId });
+          await startSession.mutateAsync({ id: visitorId });
           console.log("Started session for visitor:", visitorId);
         } catch (error) {
           console.error("Failed to start session:", error);
