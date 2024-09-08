@@ -12,16 +12,10 @@ export interface ChatState {
   newConversationInputRef: React.RefObject<HTMLInputElement> | null;
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
   setActiveVisitors: (visitors: Visitor[]) => void;
-  setConversations: (conversations: FullConversation[]) => void;
   setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
   addActiveVisitor: (visitor: Visitor) => void;
   removeActiveVisitor: (visitorId: string) => void;
-  addConversation: (conversation: FullConversation) => void;
-  updateConversation: (
-    conversationId: string,
-    updates: Partial<FullConversation>,
-  ) => void;
   setNewConversationInputRef: (
     ref: React.RefObject<HTMLInputElement> | null,
   ) => void;
@@ -47,7 +41,6 @@ export const createChatStore = (initProps: ChatStoreProps) => {
     newConversationInputRef: null,
     newMessageInputRef: null,
     setActiveVisitors: (visitors) => set({ activeVisitors: visitors }),
-    setConversations: (conversations) => set({ conversations }),
     setActiveConversation: (conversation) => {
       set({ activeConversation: conversation });
       // Focus the newMessageInput after setting the active conversation
@@ -67,16 +60,7 @@ export const createChatStore = (initProps: ChatStoreProps) => {
       set((state) => ({
         activeVisitors: state.activeVisitors.filter((v) => v.id !== visitorId),
       })),
-    addConversation: (conversation) =>
-      set((state) => ({
-        conversations: [conversation, ...state.conversations],
-      })),
-    updateConversation: (conversationId, updates) =>
-      set((state) => ({
-        conversations: state.conversations.map((conv) =>
-          conv.id === conversationId ? { ...conv, ...updates } : conv,
-        ),
-      })),
+
     setNewConversationInputRef: (ref) => set({ newConversationInputRef: ref }),
     focusNewConversationInput: () => {
       const { newConversationInputRef } = get();

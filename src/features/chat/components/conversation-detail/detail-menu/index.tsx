@@ -17,8 +17,6 @@ export const DetailMenu = () => {
     activeConversation: state.activeConversation,
   }));
 
-  console.log(activeVisitors);
-
   useEffect(() => {
     setNewConversationInputRef(inputRef);
     return () => setNewConversationInputRef(null);

@@ -17,17 +17,16 @@ export const NewMessageInput = () => {
     activeConversation,
     setNewMessageInputRef,
     updateActiveConversation,
-    addConversation,
   } = useChatStore((state) => ({
     activeConversation: state.activeConversation,
     setNewMessageInputRef: state.setNewMessageInputRef,
     updateActiveConversation: state.updateActiveConversation,
-    addConversation: state.addConversation,
   }));
 
   const router = useRouter();
 
   const utils = api.useUtils();
+
   const createConversation = api.conversations.create.useMutation({
     onMutate: async (newConversationInput) => {
       await utils.conversations.getAll.cancel();
@@ -45,7 +44,11 @@ export const NewMessageInput = () => {
         visitorId: newConversationInput.visitorId,
         messages: [message],
       });
-      addConversation(optimisticConversation);
+      utils.conversations.getAll.setData(undefined, (old) => {
+        // make sure currentConversations is an array
+        const currentConversations = Array.isArray(old) ? old : [];
+        return [optimisticConversation, ...currentConversations];
+      });
 
       return { previousConversations };
     },
@@ -60,21 +63,61 @@ export const NewMessageInput = () => {
     },
   });
 
-  const inputRef = useRef<AutosizeTextAreaRef>(null);
+  const sendMessageMutation = api.messages.create.useMutation({
+    onMutate: async (newMessageInput) => {
+      await utils.conversations.getAll.cancel();
 
+      const previousConversations = utils.conversations.getAll.getData();
+
+      const tempId = uuidv4();
+
+      const message = generateMessage({
+        conversationId: tempId,
+        content: newMessageInput.content,
+      });
+
+      utils.conversations.getAll.setData(undefined, (old) => {
+        // Make sure currentConversations is an array
+        const currentConversations = Array.isArray(old) ? old : [];
+
+        // Find the conversation to update
+        const updatedConversations = currentConversations.map(
+          (conversation) => {
+            if (conversation.id === newMessageInput.conversationId) {
+              // Add the new message to the existing conversation
+              return {
+                ...conversation,
+                messages: [...conversation.messages, message],
+                updatedAt: new Date(), // Update the conversation's updatedAt timestamp
+              };
+            }
+            return conversation;
+          },
+        );
+
+        return updatedConversations;
+      });
+      return { previousConversations };
+    },
+    onError(err, newPost, ctx) {
+      // If the mutation fails, use the context-value from onMutate
+      utils.conversations.getAll.setData(undefined, ctx?.previousConversations);
+    },
+    async onSettled() {
+      // Sync with server once mutation has settled
+      router.push(`/chat?conversation=${activeConversation?.id}`);
+      await utils.conversations.getAll.invalidate();
+    },
+  });
+
+  // assign the new inputref to the store
+  const inputRef = useRef<AutosizeTextAreaRef>(null);
   useEffect(() => {
     setNewMessageInputRef(inputRef);
     return () => setNewMessageInputRef(null);
   }, [setNewMessageInputRef]);
 
-  const handleEnter = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      void sendMessage();
-    }
-  };
-
-  const sendMessage = async () => {
+  const callCreateConversation = async () => {
     if (message.trim() && activeConversation) {
       const result = await createConversation.mutateAsync({
         userId: activeConversation.userId,
@@ -86,9 +129,30 @@ export const NewMessageInput = () => {
         visitor: activeConversation.visitor,
       };
 
-      updateActiveConversation(fullConversation);
-      addConversation(fullConversation);
+      router.push(`/chat?conversation=${fullConversation.id}`);
       setMessage("");
+    }
+  };
+
+  const sendMessage = async () => {
+    if (message.trim() && activeConversation) {
+      sendMessageMutation.mutate({
+        conversationId: activeConversation.id,
+        content: message,
+        sentByUser: true,
+      });
+    }
+    setMessage("");
+  };
+
+  const handleEnter = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      if (activeConversation?.messages.length === 0) {
+        void callCreateConversation();
+      } else {
+        void sendMessage();
+      }
     }
   };
 

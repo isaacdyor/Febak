@@ -1,4 +1,5 @@
 import { useChatStore } from "@/features/chat/hooks/use-chat";
+import { api } from "@/trpc/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,23 +11,30 @@ export function useSync() {
   const newConversation = searchParams.has("new");
   const searchConversation = searchParams.has("search");
 
-  const { setActiveConversation, conversations, focusNewConversationInput } =
-    useChatStore((state) => ({
-      conversations: state.conversations,
-      setActiveConversation: state.setActiveConversation,
-      focusNewConversationInput: state.focusNewConversationInput,
-    }));
+  const {
+    setActiveConversation,
+    initialConversations,
+    focusNewConversationInput,
+  } = useChatStore((state) => ({
+    initialConversations: state.conversations,
+    setActiveConversation: state.setActiveConversation,
+    focusNewConversationInput: state.focusNewConversationInput,
+  }));
+
+  const { data: conversations } = api.conversations.getAll.useQuery(undefined, {
+    initialData: initialConversations,
+  });
 
   useEffect(() => {
     const syncConversationWithUrl = async () => {
       if (conversationId) {
-        const conversation = conversations.find(
+        const conversation = conversations?.find(
           (conv) => conv.id === conversationId,
         );
-        setActiveConversation(conversation ?? conversations[0] ?? null);
+        setActiveConversation(conversation ?? conversations?.[0] ?? null);
       } else if (
         (!newConversation && searchConversation) ||
-        conversations.length === 0
+        conversations?.length === 0
       ) {
         setActiveConversation(null);
         setTimeout(() => focusNewConversationInput(), 0);
