@@ -1,4 +1,5 @@
 Now:
+- complete trial issue
 - visitor chat
 - real time
 
