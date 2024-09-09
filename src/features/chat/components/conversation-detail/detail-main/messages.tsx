@@ -1,4 +1,4 @@
-import { useChatStore } from "@/features/chat/use-chat";
+import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { cn } from "@/lib/utils";
 
 export const Messages = () => {

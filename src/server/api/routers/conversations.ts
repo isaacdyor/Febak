@@ -1,8 +1,4 @@
-import {
-  createTRPCRouter,
-  privateProcedure,
-  publicProcedure,
-} from "@/server/api/trpc";
+import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import {
   conversations,
   insertConversation,
@@ -14,7 +10,7 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const conversationsRouter = createTRPCRouter({
-  create: publicProcedure
+  create: privateProcedure
     .input(
       insertConversation.extend({
         messageContent: z.string(),
@@ -26,7 +22,7 @@ export const conversationsRouter = createTRPCRouter({
         const [newConversation] = await tx
           .insert(conversations)
           .values({
-            userId: input.userId,
+            userId: ctx.user.id,
             visitorId: input.visitorId,
           })
           .returning();
@@ -44,11 +40,13 @@ export const conversationsRouter = createTRPCRouter({
           .values({
             conversationId: newConversation.id,
             content: input.messageContent,
-            sentByUser: true, // Assuming the first message is sent by the user
+            sentByUser: true,
           })
           .returning();
 
         if (!newMessage) {
+          // If message creation fails, explicitly roll back the transaction
+          tx.rollback();
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to create message",
@@ -62,8 +60,34 @@ export const conversationsRouter = createTRPCRouter({
       });
     }),
 
+  // create: privateProcedure
+  //   .input(
+  //     insertConversation.extend({
+  //       messageContent: z.string(),
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     // Insert the conversation
+  //     const [newConversation] = await ctx.db
+  //       .insert(conversations)
+  //       .values({
+  //         userId: ctx.user.id,
+  //         visitorId: input.visitorId,
+  //       })
+  //       .returning();
+
+  //     if (!newConversation) {
+  //       throw new TRPCError({
+  //         code: "INTERNAL_SERVER_ERROR",
+  //         message: "Failed to create conversation",
+  //       });
+  //     }
+
+  //     return newConversation;
+  //   }),
+
   getAll: privateProcedure.query(async ({ ctx }) => {
-    const activeVisitors = await ctx.db.query.conversations.findMany({
+    const allConversations = await ctx.db.query.conversations.findMany({
       where: and(eq(conversations.userId, ctx.user.id)),
       orderBy: (visitors, { desc }) => [desc(visitors.createdAt)],
       with: {
@@ -72,6 +96,6 @@ export const conversationsRouter = createTRPCRouter({
       },
     });
 
-    return activeVisitors.length > 0 ? activeVisitors : null;
+    return allConversations.length > 0 ? allConversations : null;
   }),
 });

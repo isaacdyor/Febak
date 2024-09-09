@@ -1,5 +1,5 @@
-import { Chat } from "@/features/chat/components";
 import { ChatStoreProvider } from "@/features/chat/chat-provider";
+import { Chat } from "@/features/chat/components";
 import { api } from "@/trpc/server";
 
 export default async function ChatPage() {

@@ -12,5 +12,4 @@ export type Conversation = z.infer<typeof selectConversation>;
 export type FullConversation = Conversation & {
   visitor: Visitor;
   messages: Message[];
-  newConversation?: boolean;
 };

@@ -3,26 +3,18 @@
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 import { type FullConversation, type Visitor } from "@/server/db/types";
-import { ne } from "drizzle-orm";
 import { createStore } from "zustand";
 
 export interface ChatState {
   activeVisitors: Visitor[];
   conversations: FullConversation[];
   activeConversation: FullConversation | null;
+  newConversationVisitor: Visitor | null;
   newConversationInputRef: React.RefObject<HTMLInputElement> | null;
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
-  setActiveVisitors: (visitors: Visitor[]) => void;
-  setConversations: (conversations: FullConversation[]) => void;
   setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
-  addActiveVisitor: (visitor: Visitor) => void;
-  removeActiveVisitor: (visitorId: string) => void;
-  addConversation: (conversation: FullConversation) => void;
-  updateConversation: (
-    conversationId: string,
-    updates: Partial<FullConversation>,
-  ) => void;
+  setNewConversationVisitor: (visitor: Visitor | null) => void;
   setNewConversationInputRef: (
     ref: React.RefObject<HTMLInputElement> | null,
   ) => void;
@@ -47,11 +39,9 @@ export const createChatStore = (initProps: ChatStoreProps) => {
     activeConversation: null,
     newConversationInputRef: null,
     newMessageInputRef: null,
-    setActiveVisitors: (visitors) => set({ activeVisitors: visitors }),
-    setConversations: (conversations) => set({ conversations }),
+    newConversationVisitor: null,
     setActiveConversation: (conversation) => {
       set({ activeConversation: conversation });
-      // Focus the newMessageInput after setting the active conversation
       setTimeout(() => get().focusNewMessageInput(), 0);
     },
     updateActiveConversation: (updates) =>
@@ -60,24 +50,8 @@ export const createChatStore = (initProps: ChatStoreProps) => {
           ? { ...state.activeConversation, ...updates }
           : null,
       })),
-    addActiveVisitor: (visitor) =>
-      set((state) => ({
-        activeVisitors: [...state.activeVisitors, visitor],
-      })),
-    removeActiveVisitor: (visitorId) =>
-      set((state) => ({
-        activeVisitors: state.activeVisitors.filter((v) => v.id !== visitorId),
-      })),
-    addConversation: (conversation) =>
-      set((state) => ({
-        conversations: [conversation, ...state.conversations],
-      })),
-    updateConversation: (conversationId, updates) =>
-      set((state) => ({
-        conversations: state.conversations.map((conv) =>
-          conv.id === conversationId ? { ...conv, ...updates } : conv,
-        ),
-      })),
+    setNewConversationVisitor: (visitor) =>
+      set({ newConversationVisitor: visitor }),
     setNewConversationInputRef: (ref) => set({ newConversationInputRef: ref }),
     focusNewConversationInput: () => {
       const { newConversationInputRef } = get();

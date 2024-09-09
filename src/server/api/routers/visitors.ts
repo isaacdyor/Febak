@@ -16,16 +16,12 @@ export const visitorsRouter = createTRPCRouter({
         userId: input.userId,
       });
     }),
-  doSomething: publicProcedure.mutation(async () => {
-    return "Hello World";
-  }),
 
   getActive: privateProcedure.query(async ({ ctx }) => {
     const activeVisitors = await ctx.db.query.visitors.findMany({
       where: and(eq(visitors.userId, ctx.user.id), eq(visitors.active, true)),
       orderBy: (visitors, { desc }) => [desc(visitors.createdAt)],
     });
-
     return activeVisitors.length > 0 ? activeVisitors : null;
   }),
 
