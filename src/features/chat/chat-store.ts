@@ -2,7 +2,6 @@
 "use client";
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
-import { conversations } from "@/server/db/schema";
 import { type FullConversation, type Visitor } from "@/server/db/types";
 import { createStore } from "zustand";
 
