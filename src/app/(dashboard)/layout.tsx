@@ -1,5 +1,6 @@
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { UserProvider } from "@/features/auth/auth-provider";
+import { VisitorChat } from "@/features/visitor-chat/components";
 import { getUser } from "@/lib/supabase/server";
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
@@ -10,7 +11,10 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
   return (
     <>
       <UserProvider user={user}>
-        <DashboardLayout>{children}</DashboardLayout>
+        <DashboardLayout>
+          <VisitorChat />
+          {children}
+        </DashboardLayout>
       </UserProvider>
     </>
   );
