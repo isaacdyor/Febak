@@ -15,11 +15,6 @@ export const dashboardConfig = [
     icon: "compass",
   },
   {
-    label: "API Keys",
-    url: "/keys",
-    icon: "key",
-  },
-  {
     label: "Settings",
     url: "/settings",
     icon: "settings",

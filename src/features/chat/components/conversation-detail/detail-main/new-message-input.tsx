@@ -63,6 +63,7 @@ export const NewMessageInput = () => {
     },
     onError(err, newPost, ctx) {
       // If the mutation fails, use the context-value from onMutate
+      console.log(err);
       utils.conversations.getAll.setData(undefined, ctx?.previousConversations);
     },
     async onSettled() {
@@ -133,13 +134,13 @@ export const NewMessageInput = () => {
         visitorId: newConversationVisitor.id,
         messageContent: message,
       });
+      console.log(result);
       const fullConversation: FullConversation = {
         ...result,
         visitor: newConversationVisitor,
       };
 
       router.push(`/chat?conversation=${fullConversation.id}`);
-      setMessage("");
     }
   };
 
@@ -151,12 +152,12 @@ export const NewMessageInput = () => {
         sentByUser: true,
       });
     }
-    setMessage("");
   };
 
   const handleEnter = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
+      setMessage("");
       if (newConversationVisitor) {
         void createConversation();
       } else {
