@@ -9,13 +9,12 @@ export interface ChatState {
   activeVisitors: Visitor[];
   conversations: FullConversation[];
   activeConversation: FullConversation | null;
+  newConversationVisitor: Visitor | null;
   newConversationInputRef: React.RefObject<HTMLInputElement> | null;
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
-  setActiveVisitors: (visitors: Visitor[]) => void;
   setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
-  addActiveVisitor: (visitor: Visitor) => void;
-  removeActiveVisitor: (visitorId: string) => void;
+  setNewConversationVisitor: (visitor: Visitor) => void;
   setNewConversationInputRef: (
     ref: React.RefObject<HTMLInputElement> | null,
   ) => void;
@@ -40,10 +39,9 @@ export const createChatStore = (initProps: ChatStoreProps) => {
     activeConversation: null,
     newConversationInputRef: null,
     newMessageInputRef: null,
-    setActiveVisitors: (visitors) => set({ activeVisitors: visitors }),
+    newConversationVisitor: null,
     setActiveConversation: (conversation) => {
       set({ activeConversation: conversation });
-      // Focus the newMessageInput after setting the active conversation
       setTimeout(() => get().focusNewMessageInput(), 0);
     },
     updateActiveConversation: (updates) =>
@@ -52,15 +50,8 @@ export const createChatStore = (initProps: ChatStoreProps) => {
           ? { ...state.activeConversation, ...updates }
           : null,
       })),
-    addActiveVisitor: (visitor) =>
-      set((state) => ({
-        activeVisitors: [...state.activeVisitors, visitor],
-      })),
-    removeActiveVisitor: (visitorId) =>
-      set((state) => ({
-        activeVisitors: state.activeVisitors.filter((v) => v.id !== visitorId),
-      })),
-
+    setNewConversationVisitor: (visitor) =>
+      set({ newConversationVisitor: visitor }),
     setNewConversationInputRef: (ref) => set({ newConversationInputRef: ref }),
     focusNewConversationInput: () => {
       const { newConversationInputRef } = get();

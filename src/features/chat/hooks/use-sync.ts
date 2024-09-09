@@ -15,10 +15,12 @@ export function useSync() {
     setActiveConversation,
     initialConversations,
     focusNewConversationInput,
+    newConversationVisitor,
   } = useChatStore((state) => ({
     initialConversations: state.conversations,
     setActiveConversation: state.setActiveConversation,
     focusNewConversationInput: state.focusNewConversationInput,
+    newConversationVisitor: state.newConversationVisitor,
   }));
 
   const { data: conversations } = api.conversations.getAll.useQuery(undefined, {
@@ -32,14 +34,18 @@ export function useSync() {
           (conv) => conv.id === conversationId,
         );
         setActiveConversation(conversation ?? conversations?.[0] ?? null);
-      } else if (
-        (!newConversation && searchConversation) ||
-        conversations?.length === 0
-      ) {
+      } else if (newConversation) {
+        if (newConversationVisitor) {
+          setActiveConversation(null);
+        } else {
+          router.push("/chat");
+          setActiveConversation(conversations?.[0] ?? null);
+        }
+      } else if (searchConversation || conversations?.length === 0) {
         setActiveConversation(null);
         setTimeout(() => focusNewConversationInput(), 0);
       } else {
-        setActiveConversation(conversations[0] ?? null);
+        setActiveConversation(conversations?.[0] ?? null);
       }
     };
     void syncConversationWithUrl();

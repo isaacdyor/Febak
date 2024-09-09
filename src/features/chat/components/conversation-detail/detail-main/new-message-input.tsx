@@ -7,23 +7,23 @@ import { generateConversation } from "@/features/chat/utils/generateConversation
 import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export const NewMessageInput = () => {
   const [message, setMessage] = useState("");
-  const {
-    activeConversation,
-    setNewMessageInputRef,
-    updateActiveConversation,
-  } = useChatStore((state) => ({
-    activeConversation: state.activeConversation,
-    setNewMessageInputRef: state.setNewMessageInputRef,
-    updateActiveConversation: state.updateActiveConversation,
-  }));
+  const { activeConversation, setNewMessageInputRef } = useChatStore(
+    (state) => ({
+      activeConversation: state.activeConversation,
+      setNewMessageInputRef: state.setNewMessageInputRef,
+    }),
+  );
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("search");
 
   const utils = api.useUtils();
 
@@ -158,7 +158,7 @@ export const NewMessageInput = () => {
 
   return (
     <>
-      {activeConversation && (
+      {!search && (
         <AutosizeTextarea
           ref={inputRef}
           style={{ height: "38px" }}

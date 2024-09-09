@@ -4,13 +4,24 @@ import Link from "next/link";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
 
 export const ConversationMenu = () => {
-  const { focusNewConversationInput } = useChatStore((state) => ({
-    focusNewConversationInput: state.focusNewConversationInput,
-  }));
+  const { focusNewConversationInput, setActiveConversation } = useChatStore(
+    (state) => ({
+      focusNewConversationInput: state.focusNewConversationInput,
+      setActiveConversation: state.setActiveConversation,
+    }),
+  );
   return (
     <div className="flex h-10 items-center gap-4 border-b p-2">
       <Input placeholder="Search conversation" className="h-6" />
-      <Link onClick={focusNewConversationInput} href="/chat?search">
+      <Link
+        onClick={() => {
+          setActiveConversation(null);
+          setTimeout(() => {
+            focusNewConversationInput();
+          }, 0);
+        }}
+        href="/chat?search"
+      >
         <SquarePen className="h-5 w-5 shrink-0 text-muted-foreground hover:cursor-pointer" />
       </Link>
     </div>

@@ -1,28 +1,26 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
-import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { type Visitor } from "@/server/db/types";
 import { useRouter } from "next/navigation";
 
 export const ConversationSuggestion: React.FC<{ visitor: Visitor }> = ({
   visitor,
 }) => {
-  const { setActiveConversation, addConversation } = useChatStore((state) => ({
-    setActiveConversation: state.setActiveConversation,
-    addConversation: state.addConversation,
-  }));
+  const { setNewConversationVisitor, setActiveConversation } = useChatStore(
+    (state) => ({
+      setNewConversationVisitor: state.setNewConversationVisitor,
+      setActiveConversation: state.setActiveConversation,
+    }),
+  );
 
   const router = useRouter();
-
-  const conversation = generateConversation(visitor);
-  conversation.newConversation = true;
 
   return (
     <div
       onMouseDown={() => {
-        addConversation(conversation);
         setTimeout(() => {
-          setActiveConversation(conversation);
+          setActiveConversation(null);
+          setNewConversationVisitor(visitor);
         }, 0);
         router.push("/chat?new");
       }}
