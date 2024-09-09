@@ -2,10 +2,12 @@ import {
   AutosizeTextarea,
   type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/features/auth/use-user";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
+import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -35,14 +37,15 @@ export const NewMessageInput = () => {
       await utils.conversations.getAll.cancel();
       const previousConversations = utils.conversations.getAll.getData();
       const tempId = uuidv4();
-      const message = generateMessage({
-        conversationId: tempId,
-        content: newConversationInput.messageContent,
-      });
+      // const message = generateMessage({
+      //   conversationId: tempId,
+      //   content: newConversationInput.messageContent,
+      // });
       const optimisticConversation = generateConversation({
         visitorId: newConversationInput.visitorId,
-        messages: [message],
+        // messages: [message],
       });
+      console.log(optimisticConversation);
       utils.conversations.getAll.setData(undefined, (old) => {
         // make sure currentConversations is an array
         const currentConversations = Array.isArray(old) ? old : [];
@@ -120,14 +123,11 @@ export const NewMessageInput = () => {
   const createConversation = async () => {
     if (message.trim() && newConversationVisitor) {
       const result = await createConversationMutation.mutateAsync({
-        // userId: user.id,
-        // visitorId: newConversationVisitor.id,
-        // messageContent: message,
-        userId: "eff994ee-475f-4d02-9f10-73378011410d",
-        visitorId: "3ec68ad2-c92b-4940-9e24-ccf8163ae6b5",
+        userId: user.id,
+        visitorId: newConversationVisitor.id,
         messageContent: message,
       });
-      console.log(result);
+
       // const fullConversation: FullConversation = {
       //   ...result,
       //   visitor: newConversationVisitor,
@@ -164,14 +164,27 @@ export const NewMessageInput = () => {
   }, [router]);
 
   return (
-    <AutosizeTextarea
-      ref={inputRef}
-      style={{ height: "38px" }}
-      minHeight={10}
-      maxHeight={100}
-      value={message}
-      onChange={(event) => setMessage(event.target.value)}
-      onKeyDown={handleEnter}
-    />
+    <>
+      <Button
+        onClick={() => {
+          createConversationMutation.mutate({
+            userId: "eff994ee-475f-4d02-9f10-73378011410d",
+            visitorId: "3ec68ad2-c92b-4940-9e24-ccf8163ae6b5",
+            messageContent: "Hello",
+          });
+        }}
+      >
+        Create me a new conversation please
+      </Button>
+      <AutosizeTextarea
+        ref={inputRef}
+        style={{ height: "38px" }}
+        minHeight={10}
+        maxHeight={100}
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+        onKeyDown={handleEnter}
+      />
+    </>
   );
 };

@@ -44,11 +44,13 @@ export const conversationsRouter = createTRPCRouter({
           .values({
             conversationId: newConversation.id,
             content: input.messageContent,
-            sentByUser: true, // Assuming the first message is sent by the user
+            sentByUser: true,
           })
           .returning();
 
         if (!newMessage) {
+          // If message creation fails, explicitly roll back the transaction
+          tx.rollback();
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to create message",
@@ -63,7 +65,11 @@ export const conversationsRouter = createTRPCRouter({
     }),
 
   // create: privateProcedure
-  //   .input(insertConversation)
+  //   .input(
+  //     insertConversation.extend({
+  //       messageContent: z.string(),
+  //     }),
+  //   )
   //   .mutation(async ({ ctx, input }) => {
   //     // Insert the conversation
   //     const [newConversation] = await ctx.db

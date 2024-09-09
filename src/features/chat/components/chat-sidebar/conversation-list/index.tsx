@@ -49,7 +49,7 @@ export const ConversationList = () => {
           <p>New Conversation</p>
         </Link>
       )}
-      {conversations?.map((conversation) => (
+      {conversations?.map((conversation, index) => (
         <Link
           key={conversation.id}
           href={`/chat?conversation=${conversation.id}`}
@@ -78,6 +78,7 @@ export const ConversationList = () => {
             {/* <p className="text-sm text-muted-foreground">
               {conversation.messages[conversation.messages.length - 1]!.content}
             </p> */}
+            <p className="text-sm text-muted-foreground">{index}</p>
           </div>
         </Link>
       ))}
