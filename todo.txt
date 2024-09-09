@@ -1,6 +1,6 @@
 Now:
-- render conversations
-- render messages
+- visitor chat
+- real time
 
 
 
