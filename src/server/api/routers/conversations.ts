@@ -62,6 +62,28 @@ export const conversationsRouter = createTRPCRouter({
       });
     }),
 
+  // create: privateProcedure
+  //   .input(insertConversation)
+  //   .mutation(async ({ ctx, input }) => {
+  //     // Insert the conversation
+  //     const [newConversation] = await ctx.db
+  //       .insert(conversations)
+  //       .values({
+  //         userId: ctx.user.id,
+  //         visitorId: input.visitorId,
+  //       })
+  //       .returning();
+
+  //     if (!newConversation) {
+  //       throw new TRPCError({
+  //         code: "INTERNAL_SERVER_ERROR",
+  //         message: "Failed to create conversation",
+  //       });
+  //     }
+
+  //     return newConversation;
+  //   }),
+
   getAll: privateProcedure.query(async ({ ctx }) => {
     const allConversations = await ctx.db.query.conversations.findMany({
       where: and(eq(conversations.userId, ctx.user.id)),

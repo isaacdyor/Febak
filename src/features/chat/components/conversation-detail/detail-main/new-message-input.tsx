@@ -33,16 +33,12 @@ export const NewMessageInput = () => {
   const createConversationMutation = api.conversations.create.useMutation({
     onMutate: async (newConversationInput) => {
       await utils.conversations.getAll.cancel();
-
       const previousConversations = utils.conversations.getAll.getData();
-
       const tempId = uuidv4();
-
       const message = generateMessage({
         conversationId: tempId,
         content: newConversationInput.messageContent,
       });
-
       const optimisticConversation = generateConversation({
         visitorId: newConversationInput.visitorId,
         messages: [message],
@@ -52,9 +48,7 @@ export const NewMessageInput = () => {
         const currentConversations = Array.isArray(old) ? old : [];
         return [optimisticConversation, ...currentConversations];
       });
-
       setNewConversationVisitor(null);
-
       return { previousConversations };
     },
     onError(err, newPost, ctx) {

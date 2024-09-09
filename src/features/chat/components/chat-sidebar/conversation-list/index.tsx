@@ -75,9 +75,9 @@ export const ConversationList = () => {
               <p className="">{conversation.visitor.name ?? "Unknown"}</p>
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
             </div>
-            <p className="text-sm text-muted-foreground">
+            {/* <p className="text-sm text-muted-foreground">
               {conversation.messages[conversation.messages.length - 1]!.content}
-            </p>
+            </p> */}
           </div>
         </Link>
       ))}
