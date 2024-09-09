@@ -1,3 +1,5 @@
+// this needs to be optimized
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
@@ -62,7 +64,7 @@ export const DetailMenu = () => {
           </div>
         )}
       </div>
-      {isFocused && !activeConversation && (
+      {isFocused && !activeConversation && !newConversationVisitor && (
         <div className="absolute flex h-10 w-full flex-col bg-background">
           {activeVisitors?.map((visitor) => (
             <Fragment key={visitor.id}>

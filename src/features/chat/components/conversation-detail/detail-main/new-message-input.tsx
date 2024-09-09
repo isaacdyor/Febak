@@ -6,9 +6,8 @@ import { useUser } from "@/features/auth/use-user";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
-import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -27,9 +26,6 @@ export const NewMessageInput = () => {
   }));
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const search = searchParams.get("search");
 
   const utils = api.useUtils();
   const { user } = useUser();
@@ -130,17 +126,20 @@ export const NewMessageInput = () => {
   const createConversation = async () => {
     if (message.trim() && newConversationVisitor) {
       const result = await createConversationMutation.mutateAsync({
-        userId: user.id,
-        visitorId: newConversationVisitor.id,
+        // userId: user.id,
+        // visitorId: newConversationVisitor.id,
+        // messageContent: message,
+        userId: "eff994ee-475f-4d02-9f10-73378011410d",
+        visitorId: "3ec68ad2-c92b-4940-9e24-ccf8163ae6b5",
         messageContent: message,
       });
       console.log(result);
-      const fullConversation: FullConversation = {
-        ...result,
-        visitor: newConversationVisitor,
-      };
+      // const fullConversation: FullConversation = {
+      //   ...result,
+      //   visitor: newConversationVisitor,
+      // };
 
-      router.push(`/chat?conversation=${fullConversation.id}`);
+      // router.push(`/chat?conversation=${fullConversation.id}`);
     }
   };
 
@@ -166,19 +165,19 @@ export const NewMessageInput = () => {
     }
   };
 
+  useEffect(() => {
+    setMessage("");
+  }, [router]);
+
   return (
-    <>
-      {!search && (
-        <AutosizeTextarea
-          ref={inputRef}
-          style={{ height: "38px" }}
-          minHeight={10}
-          maxHeight={100}
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-          onKeyDown={handleEnter}
-        />
-      )}
-    </>
+    <AutosizeTextarea
+      ref={inputRef}
+      style={{ height: "38px" }}
+      minHeight={10}
+      maxHeight={100}
+      value={message}
+      onChange={(event) => setMessage(event.target.value)}
+      onKeyDown={handleEnter}
+    />
   );
 };
