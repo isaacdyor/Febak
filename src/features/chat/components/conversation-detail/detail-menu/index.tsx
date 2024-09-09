@@ -39,7 +39,17 @@ export const DetailMenu = () => {
   return (
     <div className="relative">
       <div className="flex h-10 w-full items-center border-b px-2">
-        {search || (!activeConversation && !newConversationVisitor) ? (
+        {activeConversation || newConversationVisitor ? (
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarFallback className="border bg-background text-sm">
+                {name ? name.length > 0 && name[0]?.toUpperCase() : "U"}
+              </AvatarFallback>
+            </Avatar>
+            <p>{name ?? "Unknown"}</p>
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+          </div>
+        ) : (
           <div className="flex">
             <p>To:</p>
             <Input
@@ -49,16 +59,6 @@ export const DetailMenu = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="border bg-background text-sm">
-                {name ? name.length > 0 && name[0]?.toUpperCase() : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <p>{name ?? "Unknown"}</p>
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
           </div>
         )}
       </div>
