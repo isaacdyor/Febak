@@ -14,7 +14,7 @@ export interface ChatState {
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
   setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
-  setNewConversationVisitor: (visitor: Visitor) => void;
+  setNewConversationVisitor: (visitor: Visitor | null) => void;
   setNewConversationInputRef: (
     ref: React.RefObject<HTMLInputElement> | null,
   ) => void;

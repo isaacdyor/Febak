@@ -14,7 +14,7 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const conversationsRouter = createTRPCRouter({
-  create: publicProcedure
+  create: privateProcedure
     .input(
       insertConversation.extend({
         messageContent: z.string(),
@@ -26,7 +26,7 @@ export const conversationsRouter = createTRPCRouter({
         const [newConversation] = await tx
           .insert(conversations)
           .values({
-            userId: input.userId,
+            userId: ctx.user.id,
             visitorId: input.visitorId,
           })
           .returning();

@@ -2,6 +2,7 @@ import {
   AutosizeTextarea,
   type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
+import { useUser } from "@/features/auth/use-user";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { generateConversation } from "@/features/chat/utils/generateConversation";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
@@ -13,12 +14,17 @@ import { v4 as uuidv4 } from "uuid";
 
 export const NewMessageInput = () => {
   const [message, setMessage] = useState("");
-  const { activeConversation, setNewMessageInputRef } = useChatStore(
-    (state) => ({
-      activeConversation: state.activeConversation,
-      setNewMessageInputRef: state.setNewMessageInputRef,
-    }),
-  );
+  const {
+    activeConversation,
+    setNewMessageInputRef,
+    newConversationVisitor,
+    setNewConversationVisitor,
+  } = useChatStore((state) => ({
+    activeConversation: state.activeConversation,
+    setNewMessageInputRef: state.setNewMessageInputRef,
+    newConversationVisitor: state.newConversationVisitor,
+    setNewConversationVisitor: state.setNewConversationVisitor,
+  }));
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,8 +32,9 @@ export const NewMessageInput = () => {
   const search = searchParams.get("search");
 
   const utils = api.useUtils();
+  const { user } = useUser();
 
-  const createConversation = api.conversations.create.useMutation({
+  const createConversationMutation = api.conversations.create.useMutation({
     onMutate: async (newConversationInput) => {
       await utils.conversations.getAll.cancel();
 
@@ -49,6 +56,8 @@ export const NewMessageInput = () => {
         const currentConversations = Array.isArray(old) ? old : [];
         return [optimisticConversation, ...currentConversations];
       });
+
+      setNewConversationVisitor(null);
 
       return { previousConversations };
     },
@@ -117,16 +126,16 @@ export const NewMessageInput = () => {
     return () => setNewMessageInputRef(null);
   }, [setNewMessageInputRef]);
 
-  const callCreateConversation = async () => {
-    if (message.trim() && activeConversation) {
-      const result = await createConversation.mutateAsync({
-        userId: activeConversation.userId,
-        visitorId: activeConversation.visitorId,
+  const createConversation = async () => {
+    if (message.trim() && newConversationVisitor) {
+      const result = await createConversationMutation.mutateAsync({
+        userId: user.id,
+        visitorId: newConversationVisitor.id,
         messageContent: message,
       });
       const fullConversation: FullConversation = {
         ...result,
-        visitor: activeConversation.visitor,
+        visitor: newConversationVisitor,
       };
 
       router.push(`/chat?conversation=${fullConversation.id}`);
@@ -148,8 +157,8 @@ export const NewMessageInput = () => {
   const handleEnter = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      if (activeConversation?.messages.length === 0) {
-        void callCreateConversation();
+      if (newConversationVisitor) {
+        void createConversation();
       } else {
         void sendMessage();
       }
