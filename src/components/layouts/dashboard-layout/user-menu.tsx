@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Popover,
@@ -11,21 +12,27 @@ import { cn } from "@/lib/utils";
 
 export const UserMenu: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
   const { user } = useUser();
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "group flex items-center gap-2 rounded-md px-1 py-1",
-            isHovered && "hover:cursor-pointer hover:bg-secondary",
+            "group flex items-center gap-2 rounded-md px-1 py-1 transition-all duration-300 ease-in-out",
+            isHovered
+              ? "w-full hover:cursor-pointer hover:bg-secondary"
+              : "w-9",
           )}
         >
           <Avatar
-            className={cn("h-7 w-7", !isHovered && "hover:cursor-pointer")}
+            className={cn(
+              "h-7 w-7 transition-all duration-300 ease-in-out",
+              !isHovered && "hover:cursor-pointer",
+            )}
           >
             <AvatarFallback
               className={cn(
-                "border bg-background text-sm",
+                "border bg-background text-sm transition-colors duration-300 ease-in-out",
                 !isHovered && "hover:bg-secondary",
               )}
             >
@@ -36,16 +43,16 @@ export const UserMenu: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
           </Avatar>
           <p
             className={cn(
-              "truncate text-sm text-muted-foreground",
-              !isHovered && "hidden",
+              "truncate text-sm text-muted-foreground transition-all duration-300 ease-in-out",
+              isHovered ? "max-w-[120px] opacity-100" : "max-w-0 opacity-0",
             )}
           >
             {user.email}
           </p>
           <EllipsisIcon
             className={cn(
-              "h-4 w-4 shrink-0 text-muted-foreground",
-              !isHovered && "hidden",
+              "h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 ease-in-out",
+              isHovered ? "max-w-[16px] opacity-100" : "max-w-0 opacity-0",
             )}
           />
         </div>

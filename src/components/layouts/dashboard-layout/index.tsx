@@ -7,7 +7,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar />
       <div className="flex w-full flex-col">
         <Topbar />

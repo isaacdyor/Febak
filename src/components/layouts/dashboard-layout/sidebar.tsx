@@ -42,36 +42,26 @@ export const Sidebar: React.FC = () => {
   }, [segment, isHovered]);
 
   return (
-    <div
-      className={cn(
-        "relative flex h-screen flex-col justify-between border-r px-2 py-4 transition-all duration-300",
-        isHovered ? "w-52 max-w-52" : "w-14",
-      )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="flex">
+      {isHovered && <div className="h-screen w-14" />}
       <div
         className={cn(
-          "flex flex-col justify-center space-y-6",
-          // !isHovered && "items-center",
+          "relative z-40 flex h-screen flex-col justify-between border-r bg-background px-2 py-4 transition-all duration-300",
+          isHovered ? "absolute w-52 max-w-52" : "w-14",
         )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="flex w-full items-center px-3">
-          {isHovered ? (
-            <Logo />
-          ) : (
-            <Link href="/" as="/">
-              <h1 className="text-2xl font-semibold tracking-tighter text-primary">
-                F
-              </h1>
-            </Link>
-          )}
+        <div className={cn("h flex flex-col justify-center space-y-6")}>
+          <div className="flex w-full items-center px-3">
+            <Logo full={isHovered} />
+          </div>
+
+          <nav className="flex flex-col space-y-1">{sidebarItems}</nav>
         </div>
 
-        <nav className="flex flex-col space-y-1">{sidebarItems}</nav>
+        <UserMenu isHovered={isHovered} />
       </div>
-
-      <UserMenu isHovered={isHovered} />
     </div>
   );
 };
