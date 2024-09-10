@@ -57,7 +57,7 @@ export const ChatInput: React.FC<{ conversation: FullConversation }> = ({
       sendMessageMutation.mutate({
         conversationId: conversation.id,
         content: message,
-        sentByUser: true,
+        sentByUser: false,
       });
     }
   };
@@ -71,13 +71,15 @@ export const ChatInput: React.FC<{ conversation: FullConversation }> = ({
   };
 
   return (
-    <AutosizeTextarea
-      style={{ height: "38px" }}
-      minHeight={10}
-      maxHeight={100}
-      value={message}
-      onChange={(event) => setMessage(event.target.value)}
-      onKeyDown={handleEnter}
-    />
+    <div className="">
+      <AutosizeTextarea
+        style={{ height: "38px" }}
+        minHeight={10}
+        maxHeight={100}
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+        onKeyDown={handleEnter}
+      />
+    </div>
   );
 };

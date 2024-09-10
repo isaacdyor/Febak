@@ -1,31 +1,60 @@
+import React, { useEffect, useRef } from "react";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { cn } from "@/lib/utils";
 
 export const Messages = () => {
   const activeConversation = useChatStore((state) => state.activeConversation);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [activeConversation?.messages]);
+
   if (!activeConversation) return null;
+
+  const groupedMessages = activeConversation.messages.reduce(
+    (acc, message, index, array) => {
+      if (index === 0 || message.sentByUser !== array[index - 1]?.sentByUser) {
+        acc.push([message]);
+      } else {
+        acc[acc.length - 1]?.push(message);
+      }
+      return acc;
+    },
+    [] as (typeof activeConversation.messages)[],
+  );
+
   return (
-    <div className="flex w-full flex-col gap-2">
-      {activeConversation.messages.map((message) => (
+    <div className="flex w-full flex-col gap-3 overflow-y-auto">
+      {groupedMessages.map((group, groupIndex) => (
         <div
-          key={message.id}
+          key={groupIndex}
           className={cn(
-            "flex",
-            message.sentByUser ? "justify-end" : "justify-start",
+            "flex flex-col",
+            group[0]?.sentByUser ? "items-end" : "items-start",
           )}
         >
-          <div
-            className={cn(
-              "max-w-[80%] rounded-md px-2 py-1",
-              message.sentByUser
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground",
-            )}
-          >
-            <p>{message.content}</p>
-          </div>
+          {group.map((message, messageIndex) => (
+            <div
+              key={message.id}
+              className={cn(
+                "max-w-[80%] rounded-md px-2 py-1",
+                message.sentByUser
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground",
+                messageIndex !== 0 && "mt-0.5",
+              )}
+            >
+              <p>{message.content}</p>
+            </div>
+          ))}
         </div>
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

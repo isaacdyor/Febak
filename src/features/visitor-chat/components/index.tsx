@@ -27,7 +27,7 @@ export const VisitorChat = () => {
     conversation && (
       <div className="fixed left-2 top-2 z-40">
         {isOpen ? (
-          <div className="flex h-80 w-60 flex-col rounded-md border bg-background">
+          <div className="flex h-[400px] w-96 flex-col rounded-md border bg-background">
             <div className="flex items-center justify-between border-b p-2">
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
@@ -43,7 +43,7 @@ export const VisitorChat = () => {
                 className="rounded-full p-1 hover:cursor-pointer hover:bg-secondary"
               />
             </div>
-            <div className="flex h-full flex-col justify-end gap-2 p-4">
+            <div className="flex h-full flex-col justify-end overflow-hidden p-4">
               <Messages conversation={conversation} />
               <ChatInput conversation={conversation} />
             </div>
