@@ -1,13 +1,17 @@
-import { AutosizeTextarea } from "@/components/ui/autosize-text-area";
+import {
+  AutosizeTextarea,
+  AutosizeTextAreaRef,
+} from "@/components/ui/autosize-text-area";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";
 import { api } from "@/trpc/react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export const ChatInput: React.FC<{ conversation: FullConversation }> = ({
-  conversation,
-}) => {
+export const ChatInput: React.FC<{
+  conversation: FullConversation;
+  inputRef: React.RefObject<AutosizeTextAreaRef> | null;
+}> = ({ conversation, inputRef }) => {
   const [message, setMessage] = useState("");
   const utils = api.useUtils();
 
@@ -73,6 +77,7 @@ export const ChatInput: React.FC<{ conversation: FullConversation }> = ({
   return (
     <div className="">
       <AutosizeTextarea
+        ref={inputRef}
         style={{ height: "38px" }}
         minHeight={10}
         maxHeight={100}

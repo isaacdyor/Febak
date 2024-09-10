@@ -29,13 +29,14 @@ export const Messages = () => {
   );
 
   return (
-    <div className="flex w-full flex-col gap-3 overflow-y-auto">
+    <div className="scrollbar-hide flex w-full flex-col overflow-y-auto">
       {groupedMessages.map((group, groupIndex) => (
         <div
           key={groupIndex}
           className={cn(
             "flex flex-col",
             group[0]?.sentByUser ? "items-end" : "items-start",
+            groupIndex !== groupedMessages.length - 1 && "mb-3",
           )}
         >
           {group.map((message, messageIndex) => (

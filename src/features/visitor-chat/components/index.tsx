@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MessageCircle, X } from "lucide-react";
 import { ChatInput } from "./chat-input";
 import { Messages } from "./messages";
 import { api } from "@/trpc/react";
+import { AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 
 export const VisitorChat = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const inputRef = useRef<AutosizeTextAreaRef>(null);
 
   const [visitorId, setVisitorId] = useState<string | null>(null);
   useEffect(() => {
@@ -43,14 +45,19 @@ export const VisitorChat = () => {
                 className="rounded-full p-1 hover:cursor-pointer hover:bg-secondary"
               />
             </div>
-            <div className="flex h-full flex-col justify-end overflow-hidden p-4">
+            <div className="flex h-full flex-col justify-end gap-2 overflow-hidden p-4">
               <Messages conversation={conversation} />
-              <ChatInput conversation={conversation} />
+              <ChatInput conversation={conversation} inputRef={inputRef} />
             </div>
           </div>
         ) : (
           <div
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              setTimeout(() => {
+                inputRef.current?.focus();
+              }, 0);
+            }}
             className="rounded-full bg-secondary p-3 hover:cursor-pointer"
           >
             <MessageCircle className="h-8 w-8 text-muted-foreground" />

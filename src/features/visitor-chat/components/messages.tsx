@@ -28,34 +28,39 @@ export const Messages: React.FC<{ conversation: FullConversation }> = ({
   );
 
   return (
-    <div className="flex grow flex-col justify-end overflow-hidden">
-      <div className="scrollbar-hide flex flex-col gap-3 overflow-y-auto">
-        {groupedMessages.map((group, groupIndex) => (
-          <div
-            key={groupIndex}
-            className={cn(
-              "flex flex-col",
-              group[0]?.sentByUser ? "items-start" : "items-end",
-            )}
-          >
-            {group.map((message, messageIndex) => (
-              <div
-                key={message.id}
-                className={cn(
-                  "max-w-[80%] rounded-md px-2 py-1",
-                  message.sentByUser
-                    ? "bg-secondary text-secondary-foreground"
-                    : "bg-primary text-primary-foreground",
-                  messageIndex !== 0 && "mt-0.5",
-                )}
-              >
-                <p>{message.content}</p>
-              </div>
-            ))}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
+    <div className="scrollbar-hide flex flex-col overflow-y-auto">
+      {groupedMessages.map((group, groupIndex) => (
+        <div
+          key={groupIndex}
+          className={cn(
+            "flex flex-col",
+            group[0]?.sentByUser ? "items-start" : "items-end",
+            groupIndex !== groupedMessages.length - 1 && "mb-3",
+          )}
+        >
+          {group.map((message, messageIndex) => (
+            <div
+              key={message.id}
+              className={cn(
+                "max-w-[80%] rounded-md px-2",
+                message.sentByUser
+                  ? "bg-secondary text-secondary-foreground"
+                  : "bg-primary text-primary-foreground",
+                messageIndex !== 0 && "mt-0.5",
+                messageIndex === group.length - 1 &&
+                  groupIndex === groupedMessages.length - 1
+                  ? "pb-1 pt-1"
+                  : "py-1",
+              )}
+            >
+              <p className="whitespace-pre-wrap break-words">
+                {message.content}
+              </p>
+            </div>
+          ))}
+        </div>
+      ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
