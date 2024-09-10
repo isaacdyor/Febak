@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
 import { Icons } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { dashboardConfig } from "@/config/dashboard-config";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import React, { useMemo, useState } from "react";
 import { UserMenu } from "./user-menu";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const Sidebar: React.FC = () => {
   const segment = useSelectedLayoutSegment();
@@ -22,9 +21,8 @@ export const Sidebar: React.FC = () => {
           href={item.url}
           key={item.label}
           className={cn(
-            "flex h-10 items-center rounded-md text-sm text-muted-foreground hover:bg-secondary",
+            "flex h-10 items-center rounded-md px-2 text-sm text-muted-foreground hover:bg-secondary",
             item.url.startsWith(`/${segment}`) ? "bg-secondary" : "",
-            isHovered ? "justify-start px-3" : "w-10 justify-center",
           )}
         >
           <Icon className="h-5 w-5" />
@@ -37,25 +35,27 @@ export const Sidebar: React.FC = () => {
   return (
     <div
       className={cn(
-        "relative flex h-screen flex-col justify-between border-r bg-red-500 p-2 ease-in-out",
-        isHovered ? "w-64" : "w-14 items-center",
+        "relative flex h-screen flex-col justify-between border-r px-2 py-4 ease-in-out",
+        isHovered ? "w-52 max-w-52" : "w-14",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className={cn(
-          "flex flex-col space-y-6 bg-blue-500",
-          !isHovered && "items-center",
+          "flex flex-col justify-center space-y-6",
+          // !isHovered && "items-center",
         )}
       >
-        <div className="flex items-center">
+        <div className="flex w-full items-center px-3">
           {isHovered ? (
             <Logo />
           ) : (
-            <span className="flex h-8 w-8 items-center justify-center text-2xl font-semibold">
-              F
-            </span>
+            <Link href="/" as="/">
+              <h1 className="text-2xl font-semibold tracking-tighter text-primary">
+                F
+              </h1>
+            </Link>
           )}
         </div>
         <nav className="flex flex-col space-y-1">{sidebarItems}</nav>

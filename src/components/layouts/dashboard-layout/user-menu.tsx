@@ -16,8 +16,8 @@ export const UserMenu: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "group flex items-center gap-2 rounded-md px-2 py-1",
-            isHovered && "w-44 hover:cursor-pointer hover:bg-secondary",
+            "group flex items-center gap-2 rounded-md px-1 py-1",
+            isHovered && "hover:cursor-pointer hover:bg-secondary",
           )}
         >
           <Avatar
