@@ -1,22 +1,21 @@
 import React, { useEffect, useRef } from "react";
-import { useChatStore } from "@/features/chat/hooks/use-chat";
 import { cn } from "@/lib/utils";
+import { type FullConversation } from "@/server/db/types";
 
-export const Messages = () => {
-  const activeConversation = useChatStore((state) => state.activeConversation);
+export const Messages: React.FC<{ conversation: FullConversation }> = ({
+  conversation,
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView();
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [activeConversation?.messages]);
+  }, [conversation.messages]);
 
-  if (!activeConversation) return null;
-
-  const groupedMessages = activeConversation.messages.reduce(
+  const groupedMessages = conversation?.messages.reduce(
     (acc, message, index, array) => {
       if (index === 0 || message.sentByUser !== array[index - 1]?.sentByUser) {
         acc.push([message]);
@@ -25,17 +24,17 @@ export const Messages = () => {
       }
       return acc;
     },
-    [] as (typeof activeConversation.messages)[],
+    [] as (typeof conversation.messages)[],
   );
 
   return (
-    <div className="scrollbar-hide flex w-full flex-col overflow-y-auto">
+    <div className="scrollbar-hide flex flex-col overflow-y-auto">
       {groupedMessages.map((group, groupIndex) => (
         <div
           key={groupIndex}
           className={cn(
             "flex flex-col",
-            group[0]?.sentByUser ? "items-end" : "items-start",
+            group[0]?.sentByUser ? "items-start" : "items-end",
             groupIndex !== groupedMessages.length - 1 && "mb-3",
           )}
         >
@@ -43,14 +42,20 @@ export const Messages = () => {
             <div
               key={message.id}
               className={cn(
-                "max-w-[80%] rounded-md px-2 py-1",
+                "max-w-[80%] rounded-md px-2",
                 message.sentByUser
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground",
+                  ? "bg-secondary text-secondary-foreground"
+                  : "bg-primary text-primary-foreground",
                 messageIndex !== 0 && "mt-0.5",
+                messageIndex === group.length - 1 &&
+                  groupIndex === groupedMessages.length - 1
+                  ? "pb-1 pt-1"
+                  : "py-1",
               )}
             >
-              <p>{message.content}</p>
+              <p className="whitespace-pre-wrap break-words">
+                {message.content}
+              </p>
             </div>
           ))}
         </div>

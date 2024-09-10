@@ -107,7 +107,6 @@ export const NewMessageInput = () => {
     },
     async onSettled() {
       // Sync with server once mutation has settled
-      router.push(`/chat?conversation=${activeConversation?.id}`);
       await utils.conversations.getAll.invalidate();
     },
   });

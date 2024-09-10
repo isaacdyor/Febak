@@ -1,4 +1,8 @@
-import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import {
   conversations,
   insertConversation,
@@ -60,32 +64,6 @@ export const conversationsRouter = createTRPCRouter({
       });
     }),
 
-  // create: privateProcedure
-  //   .input(
-  //     insertConversation.extend({
-  //       messageContent: z.string(),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     // Insert the conversation
-  //     const [newConversation] = await ctx.db
-  //       .insert(conversations)
-  //       .values({
-  //         userId: ctx.user.id,
-  //         visitorId: input.visitorId,
-  //       })
-  //       .returning();
-
-  //     if (!newConversation) {
-  //       throw new TRPCError({
-  //         code: "INTERNAL_SERVER_ERROR",
-  //         message: "Failed to create conversation",
-  //       });
-  //     }
-
-  //     return newConversation;
-  //   }),
-
   getAll: privateProcedure.query(async ({ ctx }) => {
     const allConversations = await ctx.db.query.conversations.findMany({
       where: and(eq(conversations.userId, ctx.user.id)),
@@ -98,4 +76,26 @@ export const conversationsRouter = createTRPCRouter({
 
     return allConversations.length > 0 ? allConversations : null;
   }),
+
+  getByVisitorId: publicProcedure
+    .input(
+      z.object({
+        visitorId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const conversation = await ctx.db.query.conversations.findFirst({
+        where: and(
+          eq(conversations.userId, "eff994ee-475f-4d02-9f10-73378011410d"),
+          eq(conversations.visitorId, input.visitorId),
+        ),
+        orderBy: (visitors, { desc }) => [desc(visitors.createdAt)],
+        with: {
+          visitor: true,
+          messages: true,
+        },
+      });
+
+      return conversation;
+    }),
 });
