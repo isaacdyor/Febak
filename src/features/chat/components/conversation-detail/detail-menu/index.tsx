@@ -7,6 +7,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { ConversationSuggestion } from "./conversation-suggestion";
 import { api } from "@/trpc/react";
 import { useSearchParams } from "next/navigation";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
 
 export const DetailMenu = () => {
   const searchParams = useSearchParams();
@@ -40,7 +41,8 @@ export const DetailMenu = () => {
 
   return (
     <div className="relative">
-      <div className="flex h-10 w-full items-center border-b px-2">
+      <div className="flex h-10 w-full items-center gap-2 border-b px-2">
+        <ChevronLeft className="text-muted-foreground" />
         {(!activeConversation && !newConversationVisitor) || search ? (
           <div className="flex">
             <p>To:</p>
