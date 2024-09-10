@@ -1,20 +1,9 @@
 import { cn } from "@/lib/utils";
-import { api } from "@/trpc/react";
-import { useEffect, useState } from "react";
+import { type FullConversation } from "@/server/db/types";
 
-export const Messages = () => {
-  const [visitorId, setVisitorId] = useState<string | null>(null);
-  useEffect(() => {
-    const storedVisitorId =
-      typeof window !== "undefined" ? localStorage.getItem("visitorId") : null;
-    setVisitorId(storedVisitorId);
-  }, []);
-  const { data: conversation } = api.conversations.getByVisitorId.useQuery(
-    {
-      visitorId: visitorId ?? "",
-    },
-    { enabled: !!visitorId },
-  );
+export const Messages: React.FC<{ conversation: FullConversation }> = ({
+  conversation,
+}) => {
   return (
     <div className="flex flex-col">
       {conversation?.messages.map((message) => (
