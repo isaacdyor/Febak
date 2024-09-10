@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Popover,
@@ -12,10 +12,21 @@ import { cn } from "@/lib/utils";
 
 export const UserMenu: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
   const { user } = useUser();
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isHovered) {
+      setIsOpen(false);
+    }
+  }, [isHovered, isOpen]);
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
+      <PopoverTrigger asChild onClick={() => setIsOpen(!isOpen)}>
         <div
           className={cn(
             "group flex items-center gap-2 rounded-md px-1 py-1 transition-all duration-300 ease-in-out",
@@ -57,7 +68,7 @@ export const UserMenu: React.FC<{ isHovered: boolean }> = ({ isHovered }) => {
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-44 p-1">
+      <PopoverContent className={cn("w-48 p-1", !isHovered && "hidden")}>
         <div className="flex flex-col gap-2">
           <LogoutButton />
         </div>
