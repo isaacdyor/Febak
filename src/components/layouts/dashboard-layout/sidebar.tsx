@@ -25,8 +25,17 @@ export const Sidebar: React.FC = () => {
             item.url.startsWith(`/${segment}`) ? "bg-secondary" : "",
           )}
         >
-          <Icon className="h-5 w-5" />
-          {isHovered && <span className="ml-3">{item.label}</span>}
+          <div className="flex w-full items-center overflow-hidden">
+            <Icon className="h-5 w-5 flex-shrink-0" />
+            <span
+              className={cn(
+                "ml-3 transition-all duration-300",
+                isHovered ? "w-auto opacity-100" : "w-0 opacity-0",
+              )}
+            >
+              {item.label}
+            </span>
+          </div>
         </Link>
       );
     });
@@ -35,7 +44,7 @@ export const Sidebar: React.FC = () => {
   return (
     <div
       className={cn(
-        "relative flex h-screen flex-col justify-between border-r px-2 py-4 ease-in-out",
+        "relative flex h-screen flex-col justify-between border-r px-2 py-4 transition-all duration-300",
         isHovered ? "w-52 max-w-52" : "w-14",
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -58,6 +67,7 @@ export const Sidebar: React.FC = () => {
             </Link>
           )}
         </div>
+
         <nav className="flex flex-col space-y-1">{sidebarItems}</nav>
       </div>
 
