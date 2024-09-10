@@ -11,7 +11,7 @@ import { UserMenu } from "./user-menu";
 
 export const Sidebar: React.FC = () => {
   const segment = useSelectedLayoutSegment();
-  const [isHovered, setIsHovered] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   const sidebarItems = useMemo(() => {
     return dashboardConfig.map((item) => {
@@ -43,11 +43,11 @@ export const Sidebar: React.FC = () => {
 
   return (
     <div className="flex">
-      {isHovered && <div className="h-screen w-14" />}
+      <div className="h-screen w-14" />
       <div
         className={cn(
-          "relative z-40 flex h-screen flex-col justify-between border-r bg-background px-2 py-4 transition-all duration-300",
-          isHovered ? "absolute w-52 max-w-52" : "w-14",
+          "absolute z-40 flex h-screen flex-col justify-between border-r bg-background px-2 py-4 transition-all duration-300",
+          isHovered ? "w-52 max-w-52" : "w-14",
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
