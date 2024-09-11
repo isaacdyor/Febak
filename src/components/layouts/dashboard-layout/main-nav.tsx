@@ -6,12 +6,13 @@ import { dashboardConfig } from "@/config/dashboard-config";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
+import { useDashboard } from "./use-dashboard";
 import { UserMenu } from "./user-menu";
 
-export const Sidebar: React.FC = () => {
+export const MainNav: React.FC = () => {
   const segment = useSelectedLayoutSegment();
-  const [isHovered, setIsHovered] = useState(false);
+  const { isOpen, setIsOpen } = useDashboard();
 
   const sidebarItems = useMemo(() => {
     return dashboardConfig.map((item) => {
@@ -21,7 +22,7 @@ export const Sidebar: React.FC = () => {
           href={item.url}
           key={item.label}
           className={cn(
-            "flex h-10 items-center rounded-md px-2 text-sm text-muted-foreground hover:bg-secondary",
+            "flex h-10 items-center rounded-md px-2.5 text-sm text-muted-foreground hover:bg-secondary",
             item.url.startsWith(`/${segment}`) ? "bg-secondary" : "",
           )}
         >
@@ -30,7 +31,7 @@ export const Sidebar: React.FC = () => {
             <span
               className={cn(
                 "ml-3 transition-all duration-300",
-                isHovered ? "w-auto opacity-100" : "w-0 opacity-0",
+                isOpen ? "w-auto opacity-100" : "w-0 opacity-0",
               )}
             >
               {item.label}
@@ -39,28 +40,34 @@ export const Sidebar: React.FC = () => {
         </Link>
       );
     });
-  }, [segment, isHovered]);
+  }, [segment, isOpen]);
 
   return (
-    <div className="flex">
-      <div className="h-screen w-14" />
+    <div
+      className={cn(
+        "fixed left-0 top-0 z-40 h-screen transition-all duration-300 ease-in-out",
+        isOpen ? "w-52 max-w-52" : "w-14",
+        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+      )}
+    >
+      <div className="hidden h-screen w-14 md:block" />
       <div
         className={cn(
           "absolute z-40 flex h-screen flex-col justify-between border-r bg-background px-2 py-4 transition-all duration-300",
-          isHovered ? "w-52 max-w-52" : "w-14",
+          isOpen ? "w-52 max-w-52" : "w-14",
         )}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
       >
-        <div className={cn("h flex flex-col justify-center space-y-6")}>
+        <div className="h flex flex-col justify-center space-y-6">
           <div className="flex w-full items-center px-3">
-            <Logo full={isHovered} />
+            <Logo full={isOpen} />
           </div>
 
           <nav className="flex flex-col space-y-1">{sidebarItems}</nav>
         </div>
 
-        <UserMenu isHovered={isHovered} />
+        <UserMenu />
       </div>
     </div>
   );

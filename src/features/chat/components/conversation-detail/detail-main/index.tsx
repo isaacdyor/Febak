@@ -14,7 +14,7 @@ export const DetailMain = () => {
     activeConversation !== null || newConversationVisitor !== null;
 
   return (
-    <div className="flex h-full flex-col justify-end gap-2 px-8 py-4">
+    <div className="flex h-full flex-col justify-between gap-2 px-4 py-4 md:px-8">
       {showContent && (
         <>
           <Messages />

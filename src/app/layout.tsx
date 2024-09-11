@@ -19,7 +19,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable} dark`}>
       <body>
         <TRPCReactProvider>
-          <VisitorProvider />
+          {/* <VisitorProvider /> */}
 
           {children}
         </TRPCReactProvider>

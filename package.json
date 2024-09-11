@@ -13,7 +13,8 @@
     "d": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "lines": "git ls-files src | grep -v '^src/components/ui/' | xargs wc -l"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
