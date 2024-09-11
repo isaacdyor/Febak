@@ -6,7 +6,7 @@ import { MessageCircle, X } from "lucide-react";
 import { ChatInput } from "./chat-input";
 import { Messages } from "./messages";
 import { api } from "@/trpc/react";
-import { AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
+import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
 
 export const VisitorChat = () => {
   const [isOpen, setIsOpen] = useState(false);

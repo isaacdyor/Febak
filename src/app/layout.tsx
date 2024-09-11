@@ -3,7 +3,6 @@ import "@/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
-import { VisitorProvider } from "@/providers/visitor-provider";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
@@ -16,7 +15,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} dark`}>
+    <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
           {/* <VisitorProvider /> */}

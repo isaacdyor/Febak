@@ -4,14 +4,15 @@ import { DetailMain } from "./detail-main";
 import { DetailMenu } from "./detail-menu";
 
 export const ConversationDetail = () => {
-  const { activeConversation } = useChatStore((state) => ({
-    activeConversation: state.activeConversation,
+  const { showDetail } = useChatStore((state) => ({
+    showDetail: state.showDetail,
   }));
+
   return (
     <div
       className={cn(
-        "flex w-full flex-col",
-        !activeConversation && "hidden md:flex",
+        "flex w-full flex-col justify-end",
+        !showDetail && "hidden md:flex",
       )}
     >
       <DetailMenu />

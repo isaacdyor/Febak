@@ -1,6 +1,5 @@
 "use client";
 
-import { VisitorChat } from "@/features/visitor-chat/components";
 import { api } from "@/trpc/react";
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";

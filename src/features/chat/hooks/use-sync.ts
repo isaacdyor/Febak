@@ -45,7 +45,9 @@ export function useSync() {
         setActiveConversation(null);
         setTimeout(() => focusNewConversationInput(), 0);
       } else {
-        setActiveConversation(conversations?.[0] ?? null);
+        if (window.innerWidth > 768) {
+          setActiveConversation(conversations?.[0] ?? null);
+        }
       }
     };
     void syncConversationWithUrl();

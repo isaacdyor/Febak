@@ -3,11 +3,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { useChatStore } from "@/features/chat/hooks/use-chat";
+import { api } from "@/trpc/react";
+import { ChevronLeft } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ConversationSuggestion } from "./conversation-suggestion";
-import { api } from "@/trpc/react";
-import { useSearchParams } from "next/navigation";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
 
 export const DetailMenu = () => {
   const searchParams = useSearchParams();
@@ -18,12 +18,17 @@ export const DetailMenu = () => {
     (state) => state.setNewConversationInputRef,
   );
 
-  const { initialActiveVisitors, activeConversation, newConversationVisitor } =
-    useChatStore((state) => ({
-      initialActiveVisitors: state.activeVisitors,
-      activeConversation: state.activeConversation,
-      newConversationVisitor: state.newConversationVisitor,
-    }));
+  const {
+    initialActiveVisitors,
+    activeConversation,
+    newConversationVisitor,
+    setShowDetail,
+  } = useChatStore((state) => ({
+    initialActiveVisitors: state.activeVisitors,
+    activeConversation: state.activeConversation,
+    newConversationVisitor: state.newConversationVisitor,
+    setShowDetail: state.setShowDetail,
+  }));
 
   const { data: activeVisitors } = api.visitors.getActive.useQuery(undefined, {
     initialData: initialActiveVisitors,
@@ -42,7 +47,13 @@ export const DetailMenu = () => {
   return (
     <div className="relative">
       <div className="flex h-10 w-full items-center gap-2 border-b px-2">
-        <ChevronLeft className="text-muted-foreground" />
+        <div
+          className="rounded-md hover:cursor-pointer hover:bg-secondary"
+          onClick={() => setShowDetail(false)}
+        >
+          <ChevronLeft className="text-muted-foreground" />
+        </div>
+
         {(!activeConversation && !newConversationVisitor) || search ? (
           <div className="flex">
             <p>To:</p>

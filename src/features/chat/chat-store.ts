@@ -10,11 +10,13 @@ export interface ChatState {
   conversations: FullConversation[];
   activeConversation: FullConversation | null;
   newConversationVisitor: Visitor | null;
+  showDetail: boolean;
   newConversationInputRef: React.RefObject<HTMLInputElement> | null;
   newMessageInputRef: React.RefObject<AutosizeTextAreaRef> | null;
   setActiveConversation: (conversation: FullConversation | null) => void;
   updateActiveConversation: (updates: Partial<FullConversation>) => void;
   setNewConversationVisitor: (visitor: Visitor | null) => void;
+  setShowDetail: (showDetail: boolean) => void;
   setNewConversationInputRef: (
     ref: React.RefObject<HTMLInputElement> | null,
   ) => void;
@@ -37,6 +39,7 @@ export const createChatStore = (initProps: ChatStoreProps) => {
   return createStore<ChatState>()((set, get) => ({
     ...initProps,
     activeConversation: null,
+    showDetail: false,
     newConversationInputRef: null,
     newMessageInputRef: null,
     newConversationVisitor: null,
@@ -52,6 +55,7 @@ export const createChatStore = (initProps: ChatStoreProps) => {
       })),
     setNewConversationVisitor: (visitor) =>
       set({ newConversationVisitor: visitor }),
+    setShowDetail: (showDetail) => set({ showDetail }),
     setNewConversationInputRef: (ref) => set({ newConversationInputRef: ref }),
     focusNewConversationInput: () => {
       const { newConversationInputRef } = get();

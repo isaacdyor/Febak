@@ -1,6 +1,6 @@
 import {
   AutosizeTextarea,
-  AutosizeTextAreaRef,
+  type AutosizeTextAreaRef,
 } from "@/components/ui/autosize-text-area";
 import { generateMessage } from "@/features/chat/utils/generateMessage";
 import { type FullConversation } from "@/server/db/types";

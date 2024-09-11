@@ -4,14 +4,15 @@ import { ConversationList } from "./conversation-list";
 import { ConversationMenu } from "./conversation-menu";
 
 export const ChatSidebar = () => {
-  const { activeConversation } = useChatStore((state) => ({
-    activeConversation: state.activeConversation,
+  const { showDetail } = useChatStore((state) => ({
+    showDetail: state.showDetail,
   }));
+
   return (
     <div
       className={cn(
-        "flex w-96 flex-col border-r",
-        activeConversation && "hidden md:flex",
+        "flex w-full flex-col border-r md:w-96",
+        showDetail && "hidden md:flex",
       )}
     >
       <ConversationMenu />

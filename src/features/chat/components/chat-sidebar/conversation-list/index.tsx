@@ -15,10 +15,12 @@ export const ConversationList = () => {
     setActiveConversation,
     clearNewMessageInput,
     newConversationVisitor,
+    setShowDetail,
   } = useChatStore((state) => ({
     setActiveConversation: state.setActiveConversation,
     clearNewMessageInput: state.clearNewMessageInput,
     newConversationVisitor: state.newConversationVisitor,
+    setShowDetail: state.setShowDetail,
   }));
   const activeConversation = useChatStore((state) => state.activeConversation);
 
@@ -31,6 +33,7 @@ export const ConversationList = () => {
           href="/chat?new"
           onClick={() => {
             setActiveConversation(null);
+            setShowDetail(true);
             clearNewMessageInput();
           }}
           className={cn(
@@ -56,10 +59,11 @@ export const ConversationList = () => {
           onMouseDown={() => {
             setActiveConversation(conversation);
             clearNewMessageInput();
+            setShowDetail(true);
           }}
           className={cn(
             "flex items-center gap-4 border-b p-2 hover:cursor-pointer hover:bg-secondary",
-            conversation.id === activeConversation?.id && "bg-secondary",
+            conversation.id === activeConversation?.id && "md:bg-secondary",
           )}
         >
           <Avatar>

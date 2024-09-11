@@ -45,8 +45,8 @@ export const MainNav: React.FC = () => {
   return (
     <div
       className={cn(
-        "fixed left-0 top-0 z-40 h-screen transition-all duration-300 ease-in-out",
-        isOpen ? "w-52 max-w-52" : "w-14",
+        "absolute z-40 flex h-full bg-background transition-transform duration-300 ease-in-out md:static",
+        "w-52 md:w-auto",
         isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
       )}
     >
