@@ -5,10 +5,18 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
 
+// export const metadata: Metadata = {
+//   title: "Febak",
+//   description: "Sick chat app",
+//   icons: [{ rel: "icon", url: "/favicon.ico" }],
+// };
+
 export const metadata: Metadata = {
   title: "Febak",
   description: "Sick chat app",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function RootLayout({
