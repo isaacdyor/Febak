@@ -6,10 +6,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { EllipsisIcon } from "lucide-react";
-import { LogoutButton } from "./logout-button";
+
 import { useUser } from "@/features/auth/use-user";
 import { cn } from "@/lib/utils";
-import { useDashboard } from "./use-dashboard";
+import { useDashboard } from "../use-dashboard";
+import { LogoutButton } from "./logout-button";
+import { ToggleTheme } from "./toggle-theme";
 
 export const UserMenu = () => {
   const { user } = useUser();
@@ -69,7 +71,8 @@ export const UserMenu = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent className={cn("w-48 p-1", !isOpen && "hidden")}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
+          <ToggleTheme />
           <LogoutButton />
         </div>
       </PopoverContent>
