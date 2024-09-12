@@ -11,7 +11,7 @@ export const ConversationDetail = () => {
   return (
     <div
       className={cn(
-        "flex w-full flex-col justify-end",
+        "flex h-full w-full flex-col justify-end",
         !showDetail && "hidden md:flex",
       )}
     >

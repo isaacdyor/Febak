@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 import { useRealtime } from "../hooks/use-realtime";
 import { useSync } from "../hooks/use-sync";
 import { ChatSidebar } from "./chat-sidebar";

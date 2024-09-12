@@ -27,7 +27,7 @@ export const VisitorChat = () => {
 
   return (
     conversation && (
-      <div className="fixed left-2 top-2 z-50">
+      <div className="fixed bottom-2 left-2 z-50">
         {isOpen ? (
           <div className="flex h-[400px] w-96 flex-col rounded-md border bg-background">
             <div className="flex items-center justify-between border-b p-2">
