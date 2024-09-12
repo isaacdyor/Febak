@@ -17,9 +17,10 @@ export const DetailMain = () => {
     <div className="flex h-full flex-col px-4 py-4 md:px-8">
       {showContent && (
         <>
-          <div className="flex-grow overflow-y-auto">
+          <div className="relative flex-grow overflow-hidden">
             <Messages />
           </div>
+
           <div className="mt-auto pt-2">
             <NewMessageInput />
           </div>

@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { VisitorProvider } from "@/providers/visitor-provider";
 
 // export const metadata: Metadata = {
 //   title: "Febak",
@@ -26,7 +27,7 @@ export default async function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          {/* <VisitorProvider /> */}
+          <VisitorProvider />
 
           {children}
         </TRPCReactProvider>

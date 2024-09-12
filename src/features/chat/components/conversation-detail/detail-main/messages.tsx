@@ -7,7 +7,7 @@ export const Messages = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView();
   };
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const Messages = () => {
   );
 
   return (
-    <div className="scrollbar-hide flex w-full flex-col overflow-y-auto">
+    <div className="scrollbar-hide absolute inset-0 flex h-full w-full flex-col overflow-y-auto">
       {groupedMessages.map((group, groupIndex) => (
         <div
           key={groupIndex}
