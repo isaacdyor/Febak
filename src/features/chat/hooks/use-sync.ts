@@ -13,19 +13,16 @@ export function useSync() {
 
   const {
     setActiveConversation,
-    initialConversations,
+
     focusNewConversationInput,
     newConversationVisitor,
   } = useChatStore((state) => ({
-    initialConversations: state.conversations,
     setActiveConversation: state.setActiveConversation,
     focusNewConversationInput: state.focusNewConversationInput,
     newConversationVisitor: state.newConversationVisitor,
   }));
 
-  const { data: conversations } = api.conversations.getAll.useQuery(undefined, {
-    initialData: initialConversations,
-  });
+  const { data: conversations } = api.conversations.getAll.useQuery();
 
   useEffect(() => {
     const syncConversationWithUrl = async () => {

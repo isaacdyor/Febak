@@ -14,11 +14,15 @@ export const DetailMain = () => {
     activeConversation !== null || newConversationVisitor !== null;
 
   return (
-    <div className="flex h-full flex-col justify-between gap-2 px-4 py-4 md:px-8">
+    <div className="flex h-full flex-col px-4 py-4 md:px-8">
       {showContent && (
         <>
-          <Messages />
-          <NewMessageInput />
+          <div className="flex-grow overflow-y-auto">
+            <Messages />
+          </div>
+          <div className="mt-auto pt-2">
+            <NewMessageInput />
+          </div>
         </>
       )}
     </div>
