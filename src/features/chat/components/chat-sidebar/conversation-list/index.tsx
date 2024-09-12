@@ -6,10 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export const ConversationList = () => {
-  const initialConversations = useChatStore((state) => state.conversations);
-  const { data: conversations } = api.conversations.getAll.useQuery(undefined, {
-    initialData: initialConversations,
-  });
+  const { data: conversations } = api.conversations.getAll.useQuery();
   const searchParams = useSearchParams();
   const {
     setActiveConversation,

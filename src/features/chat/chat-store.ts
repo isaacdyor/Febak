@@ -1,4 +1,3 @@
-// src/features/chat/chat-store.ts
 "use client";
 
 import { type AutosizeTextAreaRef } from "@/components/ui/autosize-text-area";
@@ -6,8 +5,6 @@ import { type FullConversation, type Visitor } from "@/server/db/types";
 import { createStore } from "zustand";
 
 export interface ChatState {
-  activeVisitors: Visitor[];
-  conversations: FullConversation[];
   activeConversation: FullConversation | null;
   newConversationVisitor: Visitor | null;
   showDetail: boolean;
@@ -28,16 +25,10 @@ export interface ChatState {
   clearNewMessageInput: () => void;
 }
 
-export interface ChatStoreProps {
-  activeVisitors: Visitor[];
-  conversations: FullConversation[];
-}
-
 export type ChatStore = ReturnType<typeof createChatStore>;
 
-export const createChatStore = (initProps: ChatStoreProps) => {
+export const createChatStore = () => {
   return createStore<ChatState>()((set, get) => ({
-    ...initProps,
     activeConversation: null,
     showDetail: false,
     newConversationInputRef: null,

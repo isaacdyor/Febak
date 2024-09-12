@@ -5,7 +5,7 @@ export const Logo: React.FC<{ full?: boolean }> = ({ full = true }) => {
   return (
     <Link
       href="/"
-      className="flex overflow-hidden text-2xl font-semibold tracking-tighter text-primary"
+      className="flex overflow-hidden text-2xl font-semibold tracking-tighter text-foreground"
     >
       <h1>F</h1>
       <div className="flex overflow-hidden">

@@ -18,21 +18,14 @@ export const DetailMenu = () => {
     (state) => state.setNewConversationInputRef,
   );
 
-  const {
-    initialActiveVisitors,
-    activeConversation,
-    newConversationVisitor,
-    setShowDetail,
-  } = useChatStore((state) => ({
-    initialActiveVisitors: state.activeVisitors,
-    activeConversation: state.activeConversation,
-    newConversationVisitor: state.newConversationVisitor,
-    setShowDetail: state.setShowDetail,
-  }));
+  const { activeConversation, newConversationVisitor, setShowDetail } =
+    useChatStore((state) => ({
+      activeConversation: state.activeConversation,
+      newConversationVisitor: state.newConversationVisitor,
+      setShowDetail: state.setShowDetail,
+    }));
 
-  const { data: activeVisitors } = api.visitors.getActive.useQuery(undefined, {
-    initialData: initialActiveVisitors,
-  });
+  const { data: activeVisitors } = api.visitors.getActive.useQuery();
 
   useEffect(() => {
     setNewConversationInputRef(inputRef);
@@ -48,7 +41,7 @@ export const DetailMenu = () => {
     <div className="relative">
       <div className="flex h-10 w-full items-center gap-2 border-b px-2">
         <div
-          className="rounded-md hover:cursor-pointer hover:bg-secondary"
+          className="rounded-md hover:cursor-pointer hover:bg-secondary md:hidden"
           onClick={() => setShowDetail(false)}
         >
           <ChevronLeft className="text-muted-foreground" />

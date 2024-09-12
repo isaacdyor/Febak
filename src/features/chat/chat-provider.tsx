@@ -1,26 +1,14 @@
-// src/features/chat/chat-store-provider.tsx
 "use client";
 
 import React, { createContext, useRef } from "react";
-import {
-  type ChatStore,
-  type ChatStoreProps,
-  createChatStore,
-} from "./chat-store";
+import { type ChatStore, createChatStore } from "./chat-store";
 
 export const ChatStoreContext = createContext<ChatStore | null>(null);
 
-interface ChatStoreProviderProps extends ChatStoreProps {
-  children: React.ReactNode;
-}
-
-export function ChatStoreProvider({
-  children,
-  ...props
-}: ChatStoreProviderProps) {
+export function ChatStoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<ChatStore>();
   if (!storeRef.current) {
-    storeRef.current = createChatStore(props);
+    storeRef.current = createChatStore();
   }
 
   return (
