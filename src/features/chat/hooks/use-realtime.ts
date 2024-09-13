@@ -1,29 +1,39 @@
+import { useUser } from "@/features/auth/use-user";
 import { createClient } from "@/lib/supabase/client";
 import { api } from "@/trpc/react";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 const supabase = createClient();
 
 export function useRealtime() {
   const utils = api.useUtils();
-
-  const handleInsert = useCallback(() => {
-    console.log("New message inserted");
-    void utils.conversations.getAll.invalidate();
-  }, [utils.conversations.getAll]);
+  const { user } = useUser();
 
   useEffect(() => {
-    const channel = supabase.channel("realtime");
+    const handleInsert = () => {
+      void utils.conversations.getAll.invalidate();
+    };
 
-    const channelA = supabase
+    const channel = supabase
       .channel("schema-db-changes")
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "INSERT",
           schema: "public",
+          table: "messages",
         },
-        (payload) => handleInsert(),
+        () => handleInsert(),
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "conversations",
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => handleInsert(),
       )
       .subscribe();
 
@@ -31,5 +41,5 @@ export function useRealtime() {
       console.log("Cleaning up subscription");
       void supabase.removeChannel(channel);
     };
-  }, [handleInsert]);
+  }, [user.id, utils.conversations.getAll]);
 }

@@ -78,6 +78,7 @@ export const conversationsRouter = createTRPCRouter({
   }),
 
   getByVisitorId: publicProcedure
+    .meta({ openapi: { method: "GET", path: "/conversation/{visitorId}" } })
     .input(
       z.object({
         visitorId: z.string(),
